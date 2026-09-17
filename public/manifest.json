@@ -1,0 +1,19 @@
+{
+  "name": "Rural Coach — Entrenamiento Gravel",
+  "short_name": "Rural Coach",
+  "description": "Tu plan de gravel dinámico y por objetivo. Rural Cycle.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1c1b19",
+  "theme_color": "#1c1b19",
+  "lang": "es-CO",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "https://ruralcycle.cc/imagenes/logo-oscuro.webp",
+      "sizes": "512x512",
+      "type": "image/webp",
+      "purpose": "any maskable"
+    }
+  ]
+}
