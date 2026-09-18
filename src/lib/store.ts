@@ -4,7 +4,7 @@
 // caché optimista cuando Supabase está conectado.
 // ============================================================
 
-import type { Nivel, PlanTipo, TrainingPlan } from "@/types";
+import type { Nivel, ObjetivoCarrera, PlanTipo, TrainingPlan } from "@/types";
 
 const KEY = "rural_coach_state_v1";
 
@@ -22,6 +22,7 @@ export interface AppState {
   fcUmbralBase: number | null;
   km_tipicos: number | null;
   tipoPlan: PlanTipo;
+  objetivoCarrera: ObjetivoCarrera;
   pagado: boolean;
   plan: TrainingPlan | null;
 }
@@ -40,6 +41,7 @@ export const ESTADO_INICIAL: AppState = {
   fcUmbralBase: null,
   km_tipicos: null,
   tipoPlan: "evento",
+  objetivoCarrera: "posicion",
   pagado: false,
   plan: null,
 };

@@ -16,6 +16,7 @@ import type {
   FaseKey,
   Intervalo,
   Nivel,
+  ObjetivoCarrera,
   PlanFase,
   PlanTipo,
   Superficie,
@@ -35,6 +36,16 @@ export interface PlanInput {
   evento: Evento | null;
   tipo: PlanTipo;
   pctGravel: number; // 0-100 (del evento; 40 por defecto si mensual)
+  objetivo?: ObjetivoCarrera; // "ganar" sube la exigencia; "posicion" es estándar
+}
+
+/**
+ * Factor de intensidad según el objetivo de carrera.
+ * "ganar" (pelear el podio): sesiones de calidad un poco más exigentes.
+ * "posicion" (terminar fuerte): plan equilibrado estándar.
+ */
+function factorIntensidad(objetivo?: ObjetivoCarrera): number {
+  return objetivo === "ganar" ? 1.04 : 1;
 }
 
 // ---- Utilidades ----
@@ -274,9 +285,20 @@ export function generarPlan(input: PlanInput): TrainingPlan {
     // La semana 1 es "test suave": la primera salida real recalibra el FTP.
     const esSemanaPrueba = semana === 1;
 
+    const factor = factorIntensidad(input.objetivo);
     tipos.forEach((tipo, idx) => {
       const duracion = duracionSesion(tipo, cfg, fase, semanaEnFase, input.horasSemana);
-      const estructura = estructuraPara(tipo, fase, semanaEnFase, duracion);
+      let estructura = estructuraPara(tipo, fase, semanaEnFase, duracion);
+      // "Ganar" sube la exigencia en las sesiones de calidad (no en fondo/descanso).
+      if (factor > 1 && tipo !== "fondo" && tipo !== "descanso") {
+        estructura = {
+          ...estructura,
+          bloques: estructura.bloques.map((b) => ({
+            ...b,
+            pct_ftp: Math.min(130, Math.round(b.pct_ftp * factor)),
+          })),
+        };
+      }
       const tss = calcularTss(estructura, duracion);
       workouts.push({
         id: `w-${semana}-${idx}`,

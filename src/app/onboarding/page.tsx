@@ -9,7 +9,7 @@ import { authorizeUrl, ATLETA_DEV } from "@/lib/strava";
 import { estimarFtpDesde20min, estimarFtpRutaB, estimarFcUmbral } from "@/lib/zones";
 import { ACTIVIDAD_MOCK, EVENTOS } from "@/lib/sample-data";
 import { generarPlan, type PlanInput } from "@/lib/plan-engine";
-import type { Nivel } from "@/types";
+import type { Nivel, ObjetivoCarrera } from "@/types";
 
 const DIAS_LABEL = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
 
@@ -75,6 +75,10 @@ function OnboardingInner() {
     setSt(saveState({ nivel: n }));
   }
 
+  function setObjetivo(o: ObjetivoCarrera) {
+    setSt(saveState({ objetivoCarrera: o }));
+  }
+
   function verMiPlan() {
     setGenerando(true);
     let ftp = st!.ftpBase;
@@ -100,6 +104,7 @@ function OnboardingInner() {
       evento,
       tipo: st!.tipoPlan,
       pctGravel: evento?.pct_gravel ?? 40,
+      objetivo: st!.objetivoCarrera,
     };
     const plan = generarPlan(input);
     saveState({ ftpBase: ftp, fcUmbralBase: fcU, km_tipicos: Number(kmSalida) || null, plan });
@@ -221,6 +226,32 @@ function OnboardingInner() {
                   </button>
                 ))}
               </div>
+
+              {/* Objetivo de carrera (solo con evento) */}
+              {evento && (
+                <>
+                  <span className="rc-eyebrow">¿Cuál es tu objetivo en {evento.nombre}?</span>
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, margin: "8px 0 20px", maxWidth: 460 }}>
+                    {([
+                      { key: "ganar" as ObjetivoCarrera, titulo: "Pelear el podio", desc: "Plan más exigente: más intensidad y calidad." },
+                      { key: "posicion" as ObjetivoCarrera, titulo: "Buena posición", desc: "Llegar fuerte y disfrutar. Plan equilibrado." },
+                    ]).map((o) => {
+                      const activo = st.objetivoCarrera === o.key;
+                      return (
+                        <button
+                          key={o.key}
+                          onClick={() => setObjetivo(o.key)}
+                          className="rc-card"
+                          style={{ textAlign: "left", cursor: "pointer", padding: 14, border: activo ? "2px solid var(--color-terracotta)" : "1px solid var(--border-default)", background: activo ? "color-mix(in srgb, var(--color-terracotta) 8%, #fff)" : "#fff" }}
+                        >
+                          <b style={{ fontSize: 15, display: "block" }}>{o.titulo}</b>
+                          <span style={{ fontSize: 12.5, color: "var(--color-text-muted)" }}>{o.desc}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </>
+              )}
 
               {/* Días disponibles */}
               <span className="rc-eyebrow">¿Qué días puedes entrenar?</span>

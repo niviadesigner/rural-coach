@@ -19,6 +19,9 @@ export type Superficie = "gravel" | "ruta" | "mixto";
 
 export type PlanTipo = "evento" | "mensual" | "3m" | "6m";
 
+/** Objetivo del atleta en la carrera: pelear el podio o terminar en buena posición. */
+export type ObjetivoCarrera = "ganar" | "posicion";
+
 export type PlanEstado = "prueba" | "activo" | "finalizado";
 
 export interface Evento {
