@@ -50,8 +50,8 @@ export default function Home() {
             <span style={{ color: "var(--color-mustard)" }}>hecho para tu evento.</span>
           </h1>
           <p style={{ fontSize: 19, maxWidth: "56ch", color: "rgba(240,235,224,0.85)" }}>
-            &quot;Faltan 8 semanas para la Martus, dame mi plan&quot; — y lo recibes al instante. Dinámico,
-            personalizado y con la primera semana <b style={{ color: "var(--color-mustard)" }}>gratis</b>.
+            &quot;Faltan 8 semanas para el Nacional de Gravel, dame mi plan&quot; — y lo recibes al instante.
+            Dinámico, personalizado y con la primera semana <b style={{ color: "var(--color-mustard)" }}>gratis</b>.
           </p>
         </div>
       </section>
@@ -78,14 +78,26 @@ export default function Home() {
                 className="rc-card rc-card--mustard"
                 style={{ textAlign: "left", cursor: "pointer", padding: 0, overflow: "hidden", display: "flex", flexDirection: "column" }}
               >
-                <div style={{ position: "relative", aspectRatio: "16/9", background: "var(--color-surface-card)" }}>
+                <div
+                  className="topo-dark"
+                  style={{ position: "relative", aspectRatio: "16/9", display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }}
+                >
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={e.imagen_url} alt={e.nombre} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                  {e.es_rural_cycle && (
-                    <span className="rc-tag" style={{ position: "absolute", top: 10, left: 10, background: "var(--color-mustard)", color: "var(--color-charcoal-black)", border: "none" }}>
-                      Rural Cycle
-                    </span>
-                  )}
+                  <img
+                    src={e.imagen_url}
+                    alt={e.nombre}
+                    onError={(ev) => {
+                      (ev.currentTarget as HTMLImageElement).style.display = "none";
+                    }}
+                    style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }}
+                  />
+                  {/* Fallback de marca (visible si no hay logo aún) */}
+                  <span className="rc-display" style={{ fontSize: 22, color: "var(--color-mustard)", textAlign: "center", lineHeight: 1, zIndex: 0 }}>
+                    {e.nombre}
+                  </span>
+                  <span className="rc-tag" style={{ position: "absolute", top: 10, left: 10, background: "var(--color-mustard)", color: "var(--color-charcoal-black)", border: "none", zIndex: 2 }}>
+                    Destacado 2026
+                  </span>
                 </div>
                 <div style={{ padding: 18, display: "flex", flexDirection: "column", gap: 8, flex: 1 }}>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 8 }}>

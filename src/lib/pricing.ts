@@ -82,6 +82,6 @@ export function aplicarDescuento(
 
 /** Códigos demo para modo mock (en prod: tabla discount_codes). */
 export const CODIGOS_MOCK: Record<string, { descuentoPct: number; evento: string }> = {
-  MARTUS15: { descuentoPct: 15, evento: "evt-pantano-martus" },
   RURAL15: { descuentoPct: 15, evento: "*" },
+  BRUTAL15: { descuentoPct: 15, evento: "evt-brutal-gravel" },
 };

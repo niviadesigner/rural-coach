@@ -308,7 +308,7 @@ function Paywall({ onPay }: { onPay: (pagado: boolean) => void }) {
 
       <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center", marginBottom: 14 }}>
         <input
-          placeholder="Código de evento (ej. MARTUS15)"
+          placeholder="Código de evento (ej. RURAL15)"
           value={codigo}
           onChange={(e) => setCodigo(e.target.value.toUpperCase())}
           style={{ maxWidth: 240 }}

@@ -122,7 +122,14 @@ function OnboardingInner() {
           {evento && (
             <div className="rc-card rc-card--mustard" style={{ marginBottom: 24, display: "flex", gap: 14, alignItems: "center" }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={evento.imagen_url} alt="" width={64} height={64} style={{ borderRadius: 6, objectFit: "cover" }} />
+              <img
+                src={evento.imagen_url}
+                alt=""
+                width={64}
+                height={64}
+                onError={(ev) => ((ev.currentTarget as HTMLImageElement).style.display = "none")}
+                style={{ borderRadius: 6, objectFit: "cover", background: "var(--color-charcoal-black)" }}
+              />
               <div>
                 <span className="rc-eyebrow">Tu objetivo</span>
                 <h3 style={{ fontSize: 20 }}>{evento.nombre}</h3>
