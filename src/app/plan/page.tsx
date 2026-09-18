@@ -57,7 +57,11 @@ export default function PlanPage() {
       {/* Resumen del plan */}
       <section className="topo-dark" style={{ padding: "36px 0 32px" }}>
         <div className="rc-container">
-          <span className="rc-tag">Tu plan está listo</span>
+          <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 4 }}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/logo-rural.jpg" alt="Rural Coach" width={48} height={48} style={{ borderRadius: "50%" }} />
+            <span className="rc-tag">Tu plan está listo</span>
+          </div>
           <h1 className="rc-display" style={{ fontSize: "clamp(30px,5vw,52px)", color: "var(--color-cream)", margin: "12px 0 6px" }}>
             {evento ? evento.nombre : "Plan de gravel"}
           </h1>
@@ -169,7 +173,7 @@ export default function PlanPage() {
 function Metric({ v, l }: { v: string; l: string }) {
   return (
     <div>
-      <div className="rc-display" style={{ fontSize: 26, color: "var(--color-mustard)" }}>{v}</div>
+      <div className="rc-display" style={{ fontSize: 26, color: "#5fd0c1" }}>{v}</div>
       <span style={{ fontSize: 12, color: "rgba(240,235,224,0.7)" }}>{l}</span>
     </div>
   );

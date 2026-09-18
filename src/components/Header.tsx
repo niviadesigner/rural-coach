@@ -18,11 +18,11 @@ export default function Header({ paso }: { paso?: number }) {
     >
       <Link href="/" style={{ display: "flex", alignItems: "center", gap: 10, color: "inherit" }}>
         <img
-          src="https://ruralcycle.cc/imagenes/logo-oscuro.webp"
-          alt="Rural Cycle"
-          width={34}
-          height={34}
-          style={{ borderRadius: 6 }}
+          src="/logo-rural.jpg"
+          alt="Rural Coach"
+          width={40}
+          height={40}
+          style={{ borderRadius: "50%" }}
         />
         <span style={{ display: "flex", flexDirection: "column", lineHeight: 1 }}>
           <b className="rc-display" style={{ fontSize: 20, color: "var(--color-charcoal-black)" }}>
@@ -42,7 +42,7 @@ export default function Header({ paso }: { paso?: number }) {
                 width: 26,
                 height: 6,
                 borderRadius: 999,
-                background: n <= paso ? "var(--color-mustard)" : "var(--border-default)",
+                background: n <= paso ? "var(--color-teal)" : "var(--border-default)",
               }}
             />
           ))}

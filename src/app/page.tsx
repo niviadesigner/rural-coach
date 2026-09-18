@@ -128,10 +128,10 @@ export default function Home() {
                     style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }}
                   />
                   {/* Fallback de marca (visible si no hay logo aún) */}
-                  <span className="rc-display" style={{ fontSize: 22, color: "var(--color-mustard)", textAlign: "center", lineHeight: 1, zIndex: 0 }}>
+                  <span className="rc-display" style={{ fontSize: 22, color: "var(--color-cream)", textAlign: "center", lineHeight: 1, zIndex: 0 }}>
                     {e.nombre}
                   </span>
-                  <span className="rc-tag" style={{ position: "absolute", top: 10, left: 10, background: "var(--color-mustard)", color: "var(--color-charcoal-black)", border: "none", zIndex: 2 }}>
+                  <span className="rc-tag" style={{ position: "absolute", top: 10, left: 10, background: "var(--color-teal)", color: "var(--color-cream)", border: "none", zIndex: 2 }}>
                     Destacado 2026
                   </span>
                 </div>
