@@ -114,9 +114,10 @@ textarea {
   background-position: center;
 }
 .topo-dark {
-  background-color: var(--color-charcoal-black);
-  /* Capa oscura translúcida sobre el patrón: baja la intensidad de las líneas. */
-  background-image: linear-gradient(rgba(28, 27, 25, 0.66), rgba(28, 27, 25, 0.66)),
+  /* Paleta C — oliva oscuro con acento teal. */
+  background-color: #243019;
+  /* Capa oliva translúcida sobre el patrón: baja la intensidad de las líneas. */
+  background-image: linear-gradient(rgba(30, 42, 24, 0.7), rgba(30, 42, 24, 0.7)),
     url("https://ruralcycle.cc/imagenes/topo-pattern-dark.webp");
   background-repeat: no-repeat, no-repeat;
   background-size: cover, cover;
@@ -142,8 +143,8 @@ textarea {
 }
 .topo-dark .rc-tag {
   color: var(--color-cream);
-  border-color: var(--border-on-dark);
-  background: rgba(240, 235, 224, 0.08);
+  border-color: rgba(44, 156, 143, 0.5);
+  background: rgba(44, 156, 143, 0.1);
 }
 
 .rc-eyebrow {
@@ -204,8 +205,12 @@ textarea {
   color: var(--color-charcoal-brown);
 }
 .topo-dark .rc-btn--outline {
-  border-color: var(--border-on-dark);
-  color: var(--color-cream);
+  border-color: var(--color-teal);
+  color: #8fd8cc;
+}
+.topo-dark .rc-btn--outline:hover {
+  background: rgba(44, 156, 143, 0.14);
+  color: #b6e7df;
 }
 .rc-btn--ghost {
   background: transparent;
