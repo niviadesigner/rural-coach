@@ -40,18 +40,19 @@ export default function Home() {
       {/* HERO */}
       <section className="topo-dark" style={{ padding: "64px 0 56px" }}>
         <div className="rc-container">
-          <span className="rc-tag">La mejor plataforma de gravel · Colombia y LATAM</span>
+          <span className="rc-tag">Tu coach de entrenamiento · Gravel y Ruta · Colombia y LATAM</span>
           <h1
             className="rc-display"
-            style={{ fontSize: "clamp(40px, 7vw, 88px)", color: "var(--color-cream)", margin: "18px 0 14px", maxWidth: 16 + "ch" }}
+            style={{ fontSize: "clamp(38px, 6.4vw, 80px)", color: "var(--color-cream)", margin: "18px 0 14px", maxWidth: "18ch" }}
           >
-            Tu plan de gravel,
+            Pagá una vez,
             <br />
-            <span style={{ color: "var(--color-mustard)" }}>hecho para tu evento.</span>
+            <span style={{ color: "var(--color-mustard)" }}>entrená hasta tu carrera.</span>
           </h1>
           <p style={{ fontSize: 19, maxWidth: "56ch", color: "rgba(240,235,224,0.85)" }}>
-            &quot;Faltan 8 semanas para el Nacional de Gravel, dame mi plan&quot; — y lo recibes al instante.
-            Dinámico, personalizado y con la primera semana <b style={{ color: "var(--color-mustard)" }}>gratis</b>.
+            Elige tu evento y recibe al instante un plan dinámico y personalizado que se ajusta con cada
+            salida. Un solo pago, tu plan completo hasta el día de la carrera — y la primera semana{" "}
+            <b style={{ color: "var(--color-mustard)" }}>gratis</b>.
           </p>
         </div>
       </section>
@@ -59,10 +60,14 @@ export default function Home() {
       {/* TOQUE 1 — ESCOGE TU EVENTO */}
       <section className="topo-light" style={{ padding: "48px 0 72px" }}>
         <div className="rc-container">
-          <span className="rc-eyebrow">Toque 1 de 4</span>
-          <h2 className="rc-display" style={{ fontSize: 34, margin: "6px 0 24px" }}>
-            Escoge tu evento
+          <span className="rc-eyebrow">Toque 1 de 4 · Elige tu objetivo</span>
+          <h2 className="rc-display" style={{ fontSize: 34, margin: "6px 0 8px" }}>
+            Próximos eventos que puedes entrenar
           </h2>
+          <p style={{ maxWidth: "60ch", color: "var(--color-text-muted)", marginBottom: 24 }}>
+            Tu carrera es tu objetivo: elige un evento y armamos el plan exacto para llegar a punto ese día.
+            ¿Aún sin fecha? También puedes <b>entrenar sin objetivo</b> con un plan mensual.
+          </p>
 
           <div
             style={{
@@ -153,7 +158,7 @@ export default function Home() {
           </div>
 
           <p style={{ marginTop: 28, color: "var(--color-text-muted)", fontSize: 14 }}>
-            ¿Sin un evento aún? También armamos planes mensuales, de 3 y 6 meses.{" "}
+            ¿Sin un evento aún? Entrena sin objetivo con un plan mensual, de 3 o 6 meses.{" "}
             <button
               className="rc-btn rc-btn--ghost"
               style={{ padding: 0, display: "inline" }}
@@ -162,7 +167,7 @@ export default function Home() {
                 router.push("/onboarding");
               }}
             >
-              Plan sin evento →
+              Entrenar sin objetivo →
             </button>
           </p>
         </div>

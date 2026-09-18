@@ -216,18 +216,21 @@ function WorkoutRow({ w, ftp }: { w: Workout; ftp: number }) {
               {est.enfriamiento_min > 0 && <li>Enfriamiento {est.enfriamiento_min} min</li>}
             </ul>
           )}
-          <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-            {w.tipo !== "descanso" && (
-              <>
+          {w.tipo !== "descanso" && (
+            <>
+              <div className="rc-eyebrow" style={{ marginBottom: 6, color: "var(--color-charcoal-black)" }}>
+                Descarga el entreno a tu ciclocomputador o app
+              </div>
+              <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
                 <button className="rc-btn rc-btn--outline" style={{ padding: "8px 14px", fontSize: 13 }} onClick={() => descargarZwo(w)}>
-                  .ZWO (Zwift) ↓
+                  Descargar .ZWO (Zwift) ↓
                 </button>
                 <button className="rc-btn rc-btn--outline" style={{ padding: "8px 14px", fontSize: 13 }} onClick={() => descargarErg(w, ftp)}>
-                  .ERG ↓
+                  Descargar .ERG (Garmin / Wahoo) ↓
                 </button>
-              </>
-            )}
-          </div>
+              </div>
+            </>
+          )}
         </div>
       )}
     </div>
@@ -296,8 +299,13 @@ function Paywall({ onPay }: { onPay: (pagado: boolean) => void }) {
               key={p.tipo}
               onClick={() => setSeleccion(p.tipo)}
               className="rc-card"
-              style={{ textAlign: "left", cursor: "pointer", border: activo ? "2px solid var(--color-mustard)" : "1px solid var(--border-on-dark)", background: activo ? "rgba(212,166,46,0.12)" : "rgba(240,235,224,0.04)" }}
+              style={{ position: "relative", textAlign: "left", cursor: "pointer", border: activo ? "2px solid var(--color-mustard)" : p.destacado ? "1px solid var(--color-mustard)" : "1px solid var(--border-on-dark)", background: activo ? "rgba(212,166,46,0.12)" : "rgba(240,235,224,0.04)" }}
             >
+              {p.destacado && (
+                <span className="rc-tag" style={{ position: "absolute", top: -10, right: 10, background: "var(--color-mustard)", color: "var(--color-charcoal-black)", border: "none", fontSize: 10 }}>
+                  Recomendado
+                </span>
+              )}
               <span className="rc-eyebrow" style={{ color: "var(--color-mustard)" }}>{p.nombre}</span>
               <div className="rc-display" style={{ fontSize: 24, color: "var(--color-cream)" }}>{formatCOP(p.precio_cop)}</div>
               <span style={{ fontSize: 12, color: "rgba(240,235,224,0.7)" }}>{p.descripcion}</span>

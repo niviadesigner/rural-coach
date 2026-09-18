@@ -21,7 +21,7 @@
   --color-text-muted: #6b6152;
 
   /* ---- Tipografía ---- */
-  --font-display: "Anton", "Arial Narrow", sans-serif;
+  --font-display: "Oswald", "Arial Narrow", sans-serif;
   --font-label: "Barlow Condensed", "Arial Narrow", sans-serif;
   --font-body: "Barlow", "Helvetica Neue", Arial, sans-serif;
 
@@ -65,9 +65,10 @@ h2,
 h3,
 h4 {
   font-family: var(--font-label);
-  font-weight: 600;
+  font-weight: 500;
   text-transform: uppercase;
-  line-height: 0.98;
+  line-height: 1;
+  letter-spacing: 0.01em;
   margin: 0;
 }
 
@@ -110,10 +111,12 @@ textarea {
 }
 .topo-dark {
   background-color: var(--color-charcoal-black);
-  background-image: url("https://ruralcycle.cc/imagenes/topo-pattern-dark.webp");
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center;
+  /* Capa oscura translúcida sobre el patrón: baja la intensidad de las líneas. */
+  background-image: linear-gradient(rgba(28, 27, 25, 0.66), rgba(28, 27, 25, 0.66)),
+    url("https://ruralcycle.cc/imagenes/topo-pattern-dark.webp");
+  background-repeat: no-repeat, no-repeat;
+  background-size: cover, cover;
+  background-position: center, center;
   color: var(--color-cream);
 }
 
@@ -150,9 +153,10 @@ textarea {
 
 .rc-display {
   font-family: var(--font-display);
+  font-weight: 600;
   text-transform: uppercase;
-  line-height: 0.92;
-  letter-spacing: 0.01em;
+  line-height: 1;
+  letter-spacing: 0.005em;
 }
 
 .rc-btn {
