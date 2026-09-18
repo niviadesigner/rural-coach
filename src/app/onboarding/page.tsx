@@ -6,7 +6,15 @@ import Header from "@/components/Header";
 import { loadState, saveState, type AppState } from "@/lib/store";
 import { MOCK_MODE } from "@/lib/supabase/client";
 import { authorizeUrl, ATLETA_DEV } from "@/lib/strava";
-import { estimarFtpDesde20min, estimarFtpRutaB, estimarFcUmbral } from "@/lib/zones";
+import {
+  estimarFtpDesde20min,
+  estimarFtpRutaB,
+  estimarFcUmbral,
+  categoriaPorWkg,
+  REFERENCIA_WKG,
+  LIMITES,
+  clamp,
+} from "@/lib/zones";
 import { ACTIVIDAD_MOCK, EVENTOS } from "@/lib/sample-data";
 import { generarPlan, type PlanInput } from "@/lib/plan-engine";
 import type { Nivel, ObjetivoCarrera } from "@/types";
@@ -79,12 +87,18 @@ function OnboardingInner() {
     setSt(saveState({ objetivoCarrera: o }));
   }
 
+  function setPeso(v: string) {
+    const n = Number(v);
+    setSt(saveState({ pesoKg: v === "" ? null : n }));
+  }
+
   function verMiPlan() {
     setGenerando(true);
     let ftp = st!.ftpBase;
     let fcU = st!.fcUmbralBase;
     if (ruta === "manual") {
-      ftp = estimarFtpRutaB(Number(watts20) || 200, ftpConocido);
+      const w = clamp(Number(watts20) || 200, LIMITES.ftpWatts.min, LIMITES.ftpWatts.max);
+      ftp = estimarFtpRutaB(w, ftpConocido);
       fcU = fcU ?? 160;
     }
     ftp = ftp ?? 200;
@@ -111,8 +125,20 @@ function OnboardingInner() {
     router.push("/plan");
   }
 
+  const wattsNum = Number(watts20) || 0;
+  const wattsValido =
+    ruta !== "manual" || (wattsNum >= LIMITES.ftpWatts.min && wattsNum <= LIMITES.ftpWatts.max);
+  const ftpMostrar =
+    ruta === "strava"
+      ? st.ftpBase
+      : watts20
+      ? estimarFtpRutaB(clamp(wattsNum, LIMITES.ftpWatts.min, LIMITES.ftpWatts.max), ftpConocido)
+      : null;
+  const wkg = ftpMostrar && st.pesoKg ? Math.round((ftpMostrar / st.pesoKg) * 10) / 10 : null;
+  const categoria = wkg ? categoriaPorWkg(wkg) : null;
+
   const puedeVerPlan =
-    st.diasDisponibles.length >= 2 && (ruta === "strava" || (ruta === "manual" && watts20));
+    st.diasDisponibles.length >= 2 && (ruta === "strava" || (ruta === "manual" && watts20 && wattsValido));
 
   return (
     <>
@@ -181,7 +207,7 @@ function OnboardingInner() {
               {ruta === "strava" && st.ftpBase && (
                 <div className="rc-card" style={{ marginBottom: 20 }}>
                   <span className="rc-eyebrow">Calibración automática desde Strava</span>
-                  <div style={{ display: "flex", gap: 20, marginTop: 8 }}>
+                  <div style={{ display: "flex", gap: 20, marginTop: 8, flexWrap: "wrap" }}>
                     <div>
                       <div className="rc-display" style={{ fontSize: 30, color: "var(--color-olive)" }}>{st.ftpBase} W</div>
                       <span style={{ fontSize: 12, color: "var(--color-text-muted)" }}>FTP estimado</span>
@@ -190,7 +216,24 @@ function OnboardingInner() {
                       <div className="rc-display" style={{ fontSize: 30, color: "var(--color-terracotta)" }}>{st.fcUmbralBase} ppm</div>
                       <span style={{ fontSize: 12, color: "var(--color-text-muted)" }}>FC umbral</span>
                     </div>
+                    {wkg && categoria && (
+                      <div>
+                        <div className="rc-display" style={{ fontSize: 30, color: categoria.color }}>{wkg.toFixed(1)} W/kg</div>
+                        <span style={{ fontSize: 12, color: "var(--color-text-muted)" }}>{categoria.label}</span>
+                      </div>
+                    )}
                   </div>
+                  <label className="rc-eyebrow" style={{ display: "block", maxWidth: 220, marginTop: 14 }}>
+                    Tu peso (kg) — para calcular W/kg
+                    <input
+                      type="number"
+                      min={LIMITES.pesoKg.min}
+                      max={LIMITES.pesoKg.max}
+                      placeholder="ej. 72"
+                      value={st.pesoKg ?? ""}
+                      onChange={(e) => setPeso(e.target.value)}
+                    />
+                  </label>
                   <p style={{ fontSize: 13, color: "var(--color-text-muted)", marginTop: 10, marginBottom: 0 }}>
                     Tu primera salida con la app afina esto automáticamente. Sin ramp tests.
                   </p>
@@ -201,16 +244,67 @@ function OnboardingInner() {
                 <div className="rc-card" style={{ marginBottom: 20, display: "flex", flexDirection: "column", gap: 14 }}>
                   <label className="rc-eyebrow">
                     ¿Cuántos vatios sostienes ~20 min? (o tu FTP si lo sabes)
-                    <input type="number" min={80} placeholder="ej. 230" value={watts20} onChange={(e) => setWatts20(e.target.value)} />
+                    <input
+                      type="number"
+                      min={LIMITES.ftpWatts.min}
+                      max={LIMITES.ftpWatts.max}
+                      placeholder="ej. 230"
+                      value={watts20}
+                      onChange={(e) => setWatts20(e.target.value)}
+                    />
                   </label>
+                  {watts20 && !wattsValido && (
+                    <span style={{ fontSize: 12.5, color: "var(--color-terracotta)" }}>
+                      Ingresa un valor realista entre {LIMITES.ftpWatts.min} y {LIMITES.ftpWatts.max} W.
+                    </span>
+                  )}
                   <label style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 14 }}>
                     <input type="checkbox" style={{ width: "auto" }} checked={ftpConocido} onChange={(e) => setFtpConocido(e.target.checked)} />
                     Ese número ya es mi FTP conocido
                   </label>
-                  <label className="rc-eyebrow">
-                    ¿Km típicos por salida?
-                    <input type="number" min={5} placeholder="ej. 45" value={kmSalida} onChange={(e) => setKmSalida(e.target.value)} />
-                  </label>
+                  <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+                    <label className="rc-eyebrow" style={{ flex: 1, minWidth: 130 }}>
+                      Tu peso (kg)
+                      <input
+                        type="number"
+                        min={LIMITES.pesoKg.min}
+                        max={LIMITES.pesoKg.max}
+                        placeholder="ej. 72"
+                        value={st.pesoKg ?? ""}
+                        onChange={(e) => setPeso(e.target.value)}
+                      />
+                    </label>
+                    <label className="rc-eyebrow" style={{ flex: 1, minWidth: 130 }}>
+                      Km típicos por salida
+                      <input
+                        type="number"
+                        min={LIMITES.kmSalida.min}
+                        max={LIMITES.kmSalida.max}
+                        placeholder="ej. 45"
+                        value={kmSalida}
+                        onChange={(e) => setKmSalida(e.target.value)}
+                      />
+                    </label>
+                  </div>
+                  {wkg && categoria && (
+                    <div style={{ display: "flex", alignItems: "baseline", gap: 10 }}>
+                      <span className="rc-display" style={{ fontSize: 24, color: categoria.color }}>{wkg.toFixed(1)} W/kg</span>
+                      <span style={{ fontSize: 13, color: "var(--color-text-muted)" }}>
+                        {categoria.label} · {categoria.rango}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Referencia de rangos reales */}
+              {ruta && (
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 20 }}>
+                  {REFERENCIA_WKG.map((r) => (
+                    <span key={r.label} className="rc-tag" style={{ fontSize: 11 }}>
+                      {r.label}: {r.rango}
+                    </span>
+                  ))}
                 </div>
               )}
 

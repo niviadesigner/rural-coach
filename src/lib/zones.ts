@@ -60,3 +60,45 @@ export function estimarFcUmbral(fcMax: number): number {
 export function estimarFcMaxPorEdad(edad: number): number {
   return Math.round(208 - 0.7 * edad);
 }
+
+// ============================================================
+// Categorías de FTP por W/kg (referencia real de ciclistas).
+// Pro ~5.5–6.5 W/kg · Amateur avanzado ~4.0–5.0 W/kg, etc.
+// ============================================================
+
+export interface CategoriaFtp {
+  label: string;
+  rango: string;
+  color: string;
+}
+
+export function categoriaPorWkg(wkg: number): CategoriaFtp {
+  if (wkg >= 5.5) return { label: "Nivel profesional", rango: "5,5–6,5 W/kg", color: "#7a2d16" };
+  if (wkg >= 5.0) return { label: "Élite / competitivo", rango: "5,0–5,5 W/kg", color: "#b5652d" };
+  if (wkg >= 4.0) return { label: "Amateur avanzado", rango: "4,0–5,0 W/kg", color: "#d4a62e" };
+  if (wkg >= 3.5) return { label: "Intermedio", rango: "3,5–4,0 W/kg", color: "#657a4f" };
+  if (wkg >= 2.5) return { label: "Recreativo", rango: "2,5–3,5 W/kg", color: "#4a5a3a" };
+  return { label: "Principiante", rango: "< 2,5 W/kg", color: "#6b6152" };
+}
+
+/** Tabla de referencia para mostrar al usuario dónde encaja. */
+export const REFERENCIA_WKG: { label: string; rango: string }[] = [
+  { label: "Profesional", rango: "5,5–6,5 W/kg · 380–450+ W" },
+  { label: "Amateur avanzado", rango: "4,0–5,0 W/kg · 270–350 W" },
+  { label: "Intermedio", rango: "3,5–4,0 W/kg" },
+  { label: "Recreativo", rango: "2,5–3,5 W/kg" },
+];
+
+/** Rangos válidos para inputs (evitan números irreales). */
+export const LIMITES = {
+  ftpWatts: { min: 80, max: 550 },
+  pesoKg: { min: 35, max: 150 },
+  kmSalida: { min: 5, max: 400 },
+  distanciaEvento: { min: 20, max: 400 },
+  desnivelEvento: { min: 0, max: 12000 },
+  horasSemana: { min: 3, max: 20 },
+};
+
+export function clamp(v: number, min: number, max: number): number {
+  return Math.max(min, Math.min(max, v));
+}

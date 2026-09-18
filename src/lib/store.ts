@@ -20,6 +20,7 @@ export interface AppState {
   horasSemana: number;
   ftpBase: number | null;
   fcUmbralBase: number | null;
+  pesoKg: number | null;
   km_tipicos: number | null;
   tipoPlan: PlanTipo;
   objetivoCarrera: ObjetivoCarrera;
@@ -39,6 +40,7 @@ export const ESTADO_INICIAL: AppState = {
   horasSemana: 6,
   ftpBase: null,
   fcUmbralBase: null,
+  pesoKg: null,
   km_tipicos: null,
   tipoPlan: "evento",
   objetivoCarrera: "posicion",

@@ -5,16 +5,28 @@ import { useState } from "react";
 import Header from "@/components/Header";
 import { EVENTOS } from "@/lib/sample-data";
 import { saveState } from "@/lib/store";
+import { LIMITES } from "@/lib/zones";
 
 function semanasHastaHoy(fecha: string): number {
   const ms = new Date(fecha).getTime() - Date.now();
   return Math.max(1, Math.round(ms / (7 * 24 * 3600 * 1000)));
 }
 
+// Rango de fechas válido: desde mañana hasta 2 años (calendario real).
+function hoyISO(): string {
+  return new Date().toISOString().slice(0, 10);
+}
+function maxFechaISO(): string {
+  const d = new Date();
+  d.setFullYear(d.getFullYear() + 2);
+  return d.toISOString().slice(0, 10);
+}
+
 export default function Home() {
   const router = useRouter();
   const [otra, setOtra] = useState(false);
   const [form, setForm] = useState({ fecha: "", distancia: "", desnivel: "" });
+  const [error, setError] = useState<string | null>(null);
 
   function elegirEvento(id: string) {
     saveState({ eventoId: id, tipoPlan: "evento", fechaEventoManual: null });
@@ -23,12 +35,31 @@ export default function Home() {
 
   function elegirOtra(e: React.FormEvent) {
     e.preventDefault();
+    const dist = Number(form.distancia);
+    const desn = Number(form.desnivel);
+    if (!form.fecha || form.fecha < hoyISO()) {
+      setError("Elige una fecha futura válida.");
+      return;
+    }
+    if (form.fecha > maxFechaISO()) {
+      setError("La fecha no puede ser a más de 2 años.");
+      return;
+    }
+    if (!dist || dist < LIMITES.distanciaEvento.min || dist > LIMITES.distanciaEvento.max) {
+      setError(`La distancia debe estar entre ${LIMITES.distanciaEvento.min} y ${LIMITES.distanciaEvento.max} km.`);
+      return;
+    }
+    if (form.desnivel && (desn < LIMITES.desnivelEvento.min || desn > LIMITES.desnivelEvento.max)) {
+      setError(`El desnivel debe estar entre ${LIMITES.desnivelEvento.min} y ${LIMITES.desnivelEvento.max} m.`);
+      return;
+    }
+    setError(null);
     saveState({
       eventoId: null,
       tipoPlan: "evento",
       fechaEventoManual: form.fecha,
-      distanciaManual: Number(form.distancia) || null,
-      desnivelManual: Number(form.desnivel) || null,
+      distanciaManual: dist,
+      desnivelManual: desn || null,
     });
     router.push("/onboarding");
   }
@@ -137,18 +168,40 @@ export default function Home() {
                 <form onSubmit={elegirOtra} style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: "auto" }}>
                   <label className="rc-eyebrow">
                     Fecha del evento
-                    <input type="date" required value={form.fecha} onChange={(ev) => setForm({ ...form, fecha: ev.target.value })} />
+                    <input
+                      type="date"
+                      required
+                      min={hoyISO()}
+                      max={maxFechaISO()}
+                      value={form.fecha}
+                      onChange={(ev) => setForm({ ...form, fecha: ev.target.value })}
+                    />
                   </label>
                   <div style={{ display: "flex", gap: 10 }}>
                     <label className="rc-eyebrow" style={{ flex: 1 }}>
                       Distancia (km)
-                      <input type="number" min={10} value={form.distancia} onChange={(ev) => setForm({ ...form, distancia: ev.target.value })} />
+                      <input
+                        type="number"
+                        min={LIMITES.distanciaEvento.min}
+                        max={LIMITES.distanciaEvento.max}
+                        step={1}
+                        value={form.distancia}
+                        onChange={(ev) => setForm({ ...form, distancia: ev.target.value })}
+                      />
                     </label>
                     <label className="rc-eyebrow" style={{ flex: 1 }}>
                       Desnivel (m)
-                      <input type="number" min={0} value={form.desnivel} onChange={(ev) => setForm({ ...form, desnivel: ev.target.value })} />
+                      <input
+                        type="number"
+                        min={LIMITES.desnivelEvento.min}
+                        max={LIMITES.desnivelEvento.max}
+                        step={50}
+                        value={form.desnivel}
+                        onChange={(ev) => setForm({ ...form, desnivel: ev.target.value })}
+                      />
                     </label>
                   </div>
+                  {error && <span style={{ fontSize: 12.5, color: "var(--color-terracotta)" }}>{error}</span>}
                   <button className="rc-btn rc-btn--primary" type="submit" style={{ justifyContent: "center" }}>
                     Continuar →
                   </button>

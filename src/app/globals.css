@@ -19,6 +19,10 @@
   --color-charcoal-black: #1c1b19;
   --color-surface-card: #e8e1d2;
   --color-text-muted: #6b6152;
+  /* Verde bosque profundo para fondos oscuros (paleta outdoor, contraste cálido) */
+  --color-forest-deep: #16291f;
+  --color-forest: #1e3a2f;
+  --color-teal: #2c9c8f;
 
   /* ---- Tipografía ---- */
   --font-display: "Oswald", "Arial Narrow", sans-serif;
