@@ -1,6 +1,11 @@
+"use client";
+
 import Link from "next/link";
+import { useAuth } from "@/lib/auth";
 
 export default function Header({ paso }: { paso?: number }) {
+  const { user, salir, disponible } = useAuth();
+
   return (
     <header
       style={{
@@ -17,13 +22,7 @@ export default function Header({ paso }: { paso?: number }) {
       }}
     >
       <Link href="/" style={{ display: "flex", alignItems: "center", gap: 10, color: "inherit" }}>
-        <img
-          src="/logo-rural.jpg"
-          alt="Rural Coach"
-          width={40}
-          height={40}
-          style={{ borderRadius: "50%" }}
-        />
+        <img src="/logo-rural.jpg" alt="Rural Coach" width={40} height={40} style={{ borderRadius: "50%" }} />
         <span style={{ display: "flex", flexDirection: "column", lineHeight: 1 }}>
           <b className="rc-display" style={{ fontSize: 20, color: "var(--color-charcoal-black)" }}>
             RURAL COACH
@@ -33,21 +32,56 @@ export default function Header({ paso }: { paso?: number }) {
           </span>
         </span>
       </Link>
-      {paso ? (
-        <div className="rc-eyebrow" aria-label={`Paso ${paso} de 4`} style={{ display: "flex", gap: 6 }}>
-          {[1, 2, 3, 4].map((n) => (
-            <span
-              key={n}
-              style={{
-                width: 26,
-                height: 6,
-                borderRadius: 999,
-                background: n <= paso ? "var(--color-teal)" : "var(--border-default)",
-              }}
-            />
+
+      <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+        {paso ? (
+          <div className="rc-eyebrow" aria-label={`Paso ${paso} de 4`} style={{ display: "flex", gap: 6 }}>
+            {[1, 2, 3, 4].map((n) => (
+              <span
+                key={n}
+                style={{
+                  width: 22,
+                  height: 6,
+                  borderRadius: 999,
+                  background: n <= paso ? "var(--color-teal)" : "var(--border-default)",
+                }}
+              />
+            ))}
+          </div>
+        ) : null}
+
+        {disponible &&
+          (user ? (
+            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <span
+                title={user.email ?? ""}
+                style={{
+                  width: 30,
+                  height: 30,
+                  borderRadius: "50%",
+                  background: "var(--color-olive)",
+                  color: "var(--color-cream)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontFamily: "var(--font-label)",
+                  fontWeight: 700,
+                  fontSize: 14,
+                  textTransform: "uppercase",
+                }}
+              >
+                {(user.email ?? "?").slice(0, 1)}
+              </span>
+              <button className="rc-btn rc-btn--ghost" style={{ padding: "6px 8px", fontSize: 12 }} onClick={() => salir()}>
+                Salir
+              </button>
+            </div>
+          ) : (
+            <Link className="rc-btn rc-btn--outline" href="/entrar" style={{ padding: "8px 14px", fontSize: 13 }}>
+              Entrar
+            </Link>
           ))}
-        </div>
-      ) : null}
+      </div>
     </header>
   );
 }

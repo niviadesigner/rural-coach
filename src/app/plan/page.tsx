@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Header from "@/components/Header";
 import { loadState, saveState, type AppState } from "@/lib/store";
+import { useAuth } from "@/lib/auth";
+import { guardarPlan } from "@/lib/persist";
 import { NOMBRE_FASE, faseDeSemana } from "@/lib/plan-engine";
 import { descargarZwo, descargarErg, descargarPdfSemana } from "@/lib/download";
 import { PLANES, formatCOP, aplicarDescuento, CODIGOS_MOCK } from "@/lib/pricing";
@@ -24,6 +26,7 @@ const COLOR_TIPO: Record<string, string> = {
 
 export default function PlanPage() {
   const router = useRouter();
+  const { user } = useAuth();
   const [st, setSt] = useState<AppState | null>(null);
   const [semanaAbierta, setSemanaAbierta] = useState(1);
 
@@ -35,6 +38,23 @@ export default function PlanPage() {
     }
     setSt(s);
   }, [router]);
+
+  // Al iniciar sesión, guarda el plan en la nube (una vez por sesión).
+  useEffect(() => {
+    const s = loadState();
+    if (user && s.plan) {
+      const flag = `rc_saved_${user.id}`;
+      if (typeof window !== "undefined" && !sessionStorage.getItem(flag)) {
+        guardarPlan(user.id, s.plan).then(() => {
+          try {
+            sessionStorage.setItem(flag, "1");
+          } catch {
+            /* noop */
+          }
+        });
+      }
+    }
+  }, [user]);
 
   if (!st || !st.plan) return null;
   const plan = st.plan;
@@ -242,6 +262,8 @@ function WorkoutRow({ w, ftp }: { w: Workout; ftp: number }) {
 }
 
 function Paywall({ onPay }: { onPay: (pagado: boolean) => void }) {
+  const router = useRouter();
+  const { user, disponible } = useAuth();
   const [codigo, setCodigo] = useState("");
   const [seleccion, setSeleccion] = useState("evento_3m");
   const [cargando, setCargando] = useState(false);
@@ -252,6 +274,11 @@ function Paywall({ onPay }: { onPay: (pagado: boolean) => void }) {
   const desc = aplicarDescuento(plan, codigo || null, codigoValido);
 
   async function pagar() {
+    // Login requerido para desbloquear/pagar (guarda tu plan en tu cuenta).
+    if (disponible && !user) {
+      router.push("/entrar?next=/plan");
+      return;
+    }
     setCargando(true);
     setMsg(null);
     try {
@@ -338,7 +365,7 @@ function Paywall({ onPay }: { onPay: (pagado: boolean) => void }) {
           <div className="rc-display" style={{ fontSize: 30, color: "var(--color-mustard)" }}>{formatCOP(desc.precioFinal)}</div>
         </div>
         <button className="rc-btn rc-btn--primary" onClick={pagar} disabled={cargando}>
-          {cargando ? "Procesando…" : "Pagar con Wompi →"}
+          {cargando ? "Procesando…" : disponible && !user ? "Crear cuenta para desbloquear →" : "Pagar con Wompi →"}
         </button>
       </div>
       {msg && <p style={{ color: "var(--color-cream)", fontSize: 13, marginTop: 12 }}>{msg}</p>}
