@@ -37,6 +37,7 @@ export interface Evento {
   dificultad: 1 | 2 | 3 | 4 | 5;
   descripcion: string;
   imagen_url: string;
+  temperatura_zona_c?: number; // temperatura típica de la zona del evento (°C)
 }
 
 export interface Perfil {

@@ -19,6 +19,7 @@ export const EVENTOS: Evento[] = [
     descripcion:
       "Carrera de gravel con dos distancias (60 km y 130 km) en Sáchica, Boyacá. 80% de terreno suelto y exigente.",
     imagen_url: "/eventos/brutal-gravel.png",
+    temperatura_zona_c: 22,
   },
   {
     id: "evt-giro-rigo",
@@ -33,6 +34,7 @@ export const EVENTOS: Evento[] = [
     descripcion:
       "La carrera de ruta más importante de Colombia para ciclistas aficionados. Edición La Sucursal — Cali.",
     imagen_url: "/eventos/giro-de-rigo.png",
+    temperatura_zona_c: 27,
   },
   {
     id: "evt-campeonato-gravel",
@@ -47,6 +49,7 @@ export const EVENTOS: Evento[] = [
     descripcion:
       "Carrera de gravel donde se premia al campeón nacional de Colombia de la modalidad. Competencia por categorías de edad.",
     imagen_url: "/eventos/campeonato-nacional-gravel.png",
+    temperatura_zona_c: 20,
   },
   {
     id: "evt-transcordilleras",
@@ -61,6 +64,7 @@ export const EVENTOS: Evento[] = [
     descripcion:
       "Carrera de gravel por etapas: bikepacking autoabastecido. 258 km y 6.900 m de desnivel entre cordilleras.",
     imagen_url: "/eventos/transcordilleras.png",
+    temperatura_zona_c: 19,
   },
 ];
 

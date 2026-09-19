@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import Header from "@/components/Header";
 import { loadState, saveState, type AppState } from "@/lib/store";
 import { useAuth } from "@/lib/auth";
@@ -95,6 +96,11 @@ export default function PlanPage() {
             <Metric v={`${plan.workouts.length}`} l="Sesiones" />
             <Metric v={`${tssTotal}`} l="TSS total" />
           </div>
+          {evento && (
+            <Link className="rc-btn rc-btn--outline" href="/nutricion" style={{ marginTop: 18 }}>
+              🍚 Tu sticker de nutrición · como el de Van der Poel →
+            </Link>
+          )}
         </div>
       </section>
 
