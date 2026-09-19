@@ -22,6 +22,7 @@ const COLOR_TIPO: Record<string, string> = {
   tecnica_gravel: "#7a5a2d",
   fuerza: "#4a5a3a",
   descanso: "#9a9284",
+  test: "#2c9c8f",
 };
 
 export default function PlanPage() {
@@ -214,9 +215,15 @@ function WorkoutRow({ w, ftp }: { w: Workout; ftp: number }) {
             <div style={{ display: "flex", gap: 8, alignItems: "baseline", flexWrap: "wrap" }}>
               <span className="rc-eyebrow" style={{ color: "var(--color-charcoal-black)" }}>{DIAS[w.dia]}</span>
               <b style={{ fontSize: 15 }}>{w.nombre}</b>
+              {w.tipo === "test" && (
+                <span className="rc-tag" style={{ fontSize: 10, background: "var(--color-teal)", color: "var(--color-cream)", border: "none" }}>
+                  Recalibra tu FTP
+                </span>
+              )}
             </div>
             <span style={{ fontSize: 12.5, color: "var(--color-text-muted)" }}>
               {w.duracion_min} min · TSS {w.tss_objetivo} · {w.superficie}
+              {w.tipo === "fondo" ? " · 🏔️ ventaja altura (2.600m)" : ""}
             </span>
           </div>
           <span style={{ fontSize: 12 }}>{abierto ? "−" : "detalle +"}</span>
@@ -228,15 +235,25 @@ function WorkoutRow({ w, ftp }: { w: Workout; ftp: number }) {
           {est.bloques.length > 0 && (
             <ul style={{ margin: "0 0 12px", paddingLeft: 18, display: "flex", flexDirection: "column", gap: 4 }}>
               {est.calentamiento_min > 0 && <li>Calentamiento {est.calentamiento_min} min</li>}
-              {est.bloques.map((b, i) => (
-                <li key={i}>
-                  {b.repeticiones > 1 && b.off_min > 0
-                    ? `${b.repeticiones} × (${b.on_min}′ a ${b.pct_ftp}% FTP ≈ ${Math.round((b.pct_ftp / 100) * ftp)} W / ${b.off_min}′ recup)`
-                    : `${b.on_min}′ a ${b.pct_ftp}% FTP ≈ ${Math.round((b.pct_ftp / 100) * ftp)} W`}
-                  {b.cadencia ? ` · ${b.cadencia} rpm` : ""}
-                  {b.nota ? ` — ${b.nota}` : ""}
-                </li>
-              ))}
+              {est.bloques.map((b, i) => {
+                const wOn = Math.round((b.pct_ftp / 100) * ftp);
+                let linea: string;
+                if (b.repeticiones > 1 && b.off_min > 0 && b.pct_ftp_off) {
+                  const wOff = Math.round((b.pct_ftp_off / 100) * ftp);
+                  linea = `${b.repeticiones} × (${b.on_min}′ a ${b.pct_ftp}% ≈ ${wOn} W / ${b.off_min}′ a ${b.pct_ftp_off}% ≈ ${wOff} W)`;
+                } else if (b.repeticiones > 1 && b.off_min > 0) {
+                  linea = `${b.repeticiones} × (${b.on_min}′ a ${b.pct_ftp}% FTP ≈ ${wOn} W / ${b.off_min}′ recup)`;
+                } else {
+                  linea = `${b.on_min}′ a ${b.pct_ftp}% FTP ≈ ${wOn} W`;
+                }
+                return (
+                  <li key={i}>
+                    {linea}
+                    {b.cadencia ? ` · ${b.cadencia} rpm` : ""}
+                    {b.nota ? ` — ${b.nota}` : ""}
+                  </li>
+                );
+              })}
               {est.enfriamiento_min > 0 && <li>Enfriamiento {est.enfriamiento_min} min</li>}
             </ul>
           )}

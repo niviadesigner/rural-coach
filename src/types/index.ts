@@ -13,7 +13,8 @@ export type WorkoutTipo =
   | "vo2"
   | "tecnica_gravel"
   | "fuerza"
-  | "descanso";
+  | "descanso"
+  | "test";
 
 export type Superficie = "gravel" | "ruta" | "mixto";
 
@@ -57,8 +58,9 @@ export interface Perfil {
 export interface Intervalo {
   repeticiones: number;
   on_min: number; // minutos en esfuerzo
-  off_min: number; // minutos de recuperación
+  off_min: number; // minutos de recuperación (o del tramo "under" en over/unders)
   pct_ftp: number; // objetivo de potencia como % del FTP
+  pct_ftp_off?: number; // % FTP del tramo off/under (over/unders); si falta, es recuperación suave
   pct_fc?: number; // objetivo de FC como % del FC umbral
   cadencia?: number; // rpm objetivo (opcional)
   nota?: string;

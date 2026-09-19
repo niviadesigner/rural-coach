@@ -24,7 +24,7 @@ export function workoutToZwo(w: Workout, autor = "Rural Coach"): string {
     const powerOn = (b.pct_ftp / 100).toFixed(2);
     const cad = b.cadencia ? ` Cadence="${b.cadencia}"` : "";
     if (b.repeticiones > 1 && b.off_min > 0) {
-      const powerOff = "0.55";
+      const powerOff = b.pct_ftp_off ? (b.pct_ftp_off / 100).toFixed(2) : "0.55";
       lines.push(
         `    <IntervalsT Repeat="${b.repeticiones}" OnDuration="${b.on_min * 60}" OffDuration="${
           b.off_min * 60

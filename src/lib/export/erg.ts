@@ -22,7 +22,7 @@ export function workoutToErg(w: Workout, ftp: number): string {
   for (const b of est.bloques) {
     for (let r = 0; r < b.repeticiones; r++) {
       push(b.on_min, b.pct_ftp);
-      if (b.off_min > 0) push(b.off_min, 55);
+      if (b.off_min > 0) push(b.off_min, b.pct_ftp_off ?? 55);
     }
   }
   if (est.enfriamiento_min > 0) push(est.enfriamiento_min, 50);

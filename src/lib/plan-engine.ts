@@ -139,10 +139,35 @@ function estructuraPara(
       bloques.push({ repeticiones: 3, on_min: 12, off_min: 5, pct_ftp: 85, pct_fc: 88, cadencia: 85, nota: "Tempo sostenido Z3" });
       break;
     case "umbral": {
-      const reps = 3 + Math.min(2, semanaEnFase);
-      bloques.push({ repeticiones: reps, on_min: 8, off_min: 4, pct_ftp: 98, pct_fc: 96, cadencia: 90, nota: "Al filo del FTP (Z4)" });
+      if (fase === "construccion") {
+        // Over/unders: columna vertebral de la construcción (método De Kegel).
+        const reps = 3 + Math.min(3, semanaEnFase);
+        bloques.push({
+          repeticiones: reps,
+          on_min: 2,
+          off_min: 2,
+          pct_ftp: 105,
+          pct_ftp_off: 90,
+          pct_fc: 97,
+          cadencia: 90,
+          nota: "Over/under: 2′ por encima del umbral / 2′ justo por debajo, sin soltar. Sube tu techo de verdad.",
+        });
+      } else {
+        const reps = 3 + Math.min(2, semanaEnFase);
+        bloques.push({ repeticiones: reps, on_min: 8, off_min: 4, pct_ftp: 98, pct_fc: 96, cadencia: 90, nota: "Al filo del FTP (Z4)" });
+      }
       break;
     }
+    case "test":
+      bloques.push({
+        repeticiones: 1,
+        on_min: 15,
+        off_min: 0,
+        pct_ftp: 100,
+        pct_fc: 98,
+        nota: "Test de campo: 15 min al máximo que puedas sostener. Con esto recalibramos tu FTP y tus zonas. Sin laboratorio.",
+      });
+      break;
     case "vo2":
       bloques.push({ repeticiones: 5, on_min: 4, off_min: 4, pct_ftp: 115, pct_fc: 100, cadencia: 95, nota: "VO2 máx (Z5), muy duro" });
       break;
@@ -182,7 +207,7 @@ function calcularTss(est: EstructuraIntervalos, duracionMin: number): number {
 /** Superficie recomendada según tipo y %gravel del evento. */
 function superficiePara(tipo: WorkoutTipo, pctGravel: number): Superficie {
   if (tipo === "tecnica_gravel") return "gravel";
-  if (tipo === "descanso" || tipo === "fuerza") return "mixto";
+  if (tipo === "descanso" || tipo === "fuerza" || tipo === "test") return "mixto";
   return pctGravel >= 50 ? "gravel" : "mixto";
 }
 
@@ -216,6 +241,7 @@ function duracionSesion(
   horasSemana: number
 ): number {
   if (tipo === "descanso") return 0;
+  if (tipo === "test") return 40; // calentamiento + 15′ test + enfriamiento
   const media = (horasSemana * 60) / Math.max(1, cfg.spwMax);
   if (tipo === "fondo") {
     const crecimiento = Math.min(cfg.duracionFondoTope, cfg.duracionFondoBase + semanaEnFase * 12);
@@ -235,6 +261,7 @@ const NOMBRES: Record<WorkoutTipo, string> = {
   tecnica_gravel: "Técnica gravel + potencia en suelto",
   fuerza: "Fuerza-resistencia",
   descanso: "Descanso / movilidad",
+  test: "Test de campo · 15 min",
 };
 
 const DESCRIPCIONES: Record<WorkoutTipo, string> = {
@@ -245,6 +272,7 @@ const DESCRIPCIONES: Record<WorkoutTipo, string> = {
   tecnica_gravel: "Sostener potencia en gravilla suelta: frenado, líneas, cambios de superficie.",
   fuerza: "Repeticiones de fuerza-resistencia a cadencia baja, en pendiente o gimnasio.",
   descanso: "Recuperación activa o descanso total. Tan importante como entrenar.",
+  test: "Test de 15 min al máximo sostenible. Recalibra tu FTP y tus zonas automáticamente, como los pros — sin laboratorio.",
 };
 
 /** Asigna días de la semana a las sesiones, respetando los días disponibles. */
@@ -281,6 +309,12 @@ export function generarPlan(input: PlanInput): TrainingPlan {
     const semanaEnFase = semana - faseInfo.sem_inicio;
     const nSesiones = sesionesEstaSemana(cfg, input.diasDisponibles, input.horasSemana, fase);
     const tipos = tiposPorFase(fase, nSesiones, input.pctGravel);
+    // Test de campo de 15 min cada 4 semanas (recalibra FTP), salvo taper y semana 1.
+    const esSemanaTest = semana > 1 && semana % 4 === 0 && fase !== "tapering";
+    if (esSemanaTest && tipos.length > 0) {
+      const iCalidad = tipos.findIndex((t) => t !== "fondo" && t !== "descanso" && t !== "fuerza");
+      tipos[iCalidad >= 0 ? iCalidad : 0] = "test";
+    }
     const dias = asignarDias(input.diasDisponibles, nSesiones);
     // La semana 1 es "test suave": la primera salida real recalibra el FTP.
     const esSemanaPrueba = semana === 1;
