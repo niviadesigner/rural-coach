@@ -11,6 +11,7 @@ import { NOMBRE_FASE, faseDeSemana } from "@/lib/plan-engine";
 import { descargarZwo, descargarErg, descargarPdfSemana } from "@/lib/download";
 import { PLANES, formatCOP, aplicarDescuento, CODIGOS_MOCK, planTipoPorDuracion } from "@/lib/pricing";
 import { EVENTOS } from "@/lib/sample-data";
+import { necesitaCalor } from "@/lib/heat";
 import type { Workout } from "@/types";
 
 const DIAS = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
@@ -122,11 +123,18 @@ export default function PlanPage() {
             <Metric v={`${plan.workouts.length}`} l="Sesiones" />
             <Metric v={`${tssTotal}`} l="TSS total" />
           </div>
-          {evento && (
-            <Link className="rc-btn rc-btn--outline" href="/nutricion" style={{ marginTop: 18 }}>
-              🍚 Tu sticker de nutrición · como el de Van der Poel →
-            </Link>
-          )}
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginTop: 18 }}>
+            {evento && (
+              <Link className="rc-btn rc-btn--gold" href="/nutricion">
+                🍚 Tu sticker de nutrición →
+              </Link>
+            )}
+            {necesitaCalor(evento ?? null) && (
+              <Link className="rc-btn rc-btn--outline" href="/calor">
+                🌡️ Adaptación al calor →
+              </Link>
+            )}
+          </div>
         </div>
       </section>
 
