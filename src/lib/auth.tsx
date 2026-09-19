@@ -48,14 +48,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const registrar = useCallback(
     async (email: string, password: string, nombre?: string) => {
       if (!supabase) return { error: "Autenticación no disponible." };
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: { data: nombre ? { name: nombre } : undefined },
+      // Crea la cuenta ya confirmada en el backend (sin correo de verificación)…
+      const res = await fetch("/api/auth/registrar", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password, nombre }),
       });
+      const data = await res.json();
+      if (!res.ok) return { error: traducir(data.error ?? "No se pudo crear la cuenta.") };
+      // …y entra al instante.
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) return { error: traducir(error.message) };
-      // Si no hay sesión inmediata, el proyecto exige confirmar el correo.
-      return { necesitaConfirmar: !data.session };
+      return {};
     },
     [supabase]
   );
