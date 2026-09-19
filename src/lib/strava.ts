@@ -13,7 +13,9 @@ export const SCOPES = "read,activity:read_all,profile:read_all";
 
 export function authorizeUrl(state = ""): string {
   const clientId = process.env.NEXT_PUBLIC_STRAVA_CLIENT_ID ?? "";
-  const redirect = process.env.STRAVA_REDIRECT_URI ?? "http://localhost:3000/api/strava/callback";
+  // redirect_uri se arma desde NEXT_PUBLIC_APP_URL (disponible en el cliente).
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+  const redirect = `${appUrl}/api/strava/callback`;
   const p = new URLSearchParams({
     client_id: clientId,
     redirect_uri: redirect,
