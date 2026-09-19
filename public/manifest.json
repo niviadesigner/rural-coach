@@ -10,10 +10,10 @@
   "orientation": "portrait",
   "icons": [
     {
-      "src": "https://ruralcycle.cc/imagenes/logo-oscuro.webp",
-      "sizes": "512x512",
-      "type": "image/webp",
-      "purpose": "any maskable"
+      "src": "/logo-rural.jpg",
+      "sizes": "800x800",
+      "type": "image/jpeg",
+      "purpose": "any"
     }
   ]
 }

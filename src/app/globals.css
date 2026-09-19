@@ -230,8 +230,9 @@ textarea {
   box-shadow: var(--shadow-card);
 }
 .topo-dark .rc-card {
-  background: rgba(240, 235, 224, 0.04);
-  border-color: var(--border-on-dark);
+  /* Máscara opaca para que el texto no se confunda con las líneas del fondo. */
+  background: rgba(17, 24, 14, 0.86);
+  border-color: rgba(240, 235, 224, 0.12);
   color: var(--color-cream);
 }
 .rc-card--olive {
@@ -266,11 +267,11 @@ textarea {
   display: flex;
   gap: 4px;
   padding: 8px 10px;
-  background: rgba(28, 27, 25, 0.92);
+  background: rgba(21, 94, 84, 0.95);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(240, 235, 224, 0.14);
+  border: 1px solid rgba(143, 216, 204, 0.28);
   border-radius: 999px;
-  box-shadow: 0 8px 26px rgba(28, 27, 25, 0.35);
+  box-shadow: 0 8px 26px rgba(17, 40, 36, 0.4);
 }
 .rc-bottomnav__item {
   display: flex;

@@ -9,7 +9,7 @@ import { useAuth } from "@/lib/auth";
 import { guardarPlan } from "@/lib/persist";
 import { NOMBRE_FASE, faseDeSemana } from "@/lib/plan-engine";
 import { descargarZwo, descargarErg, descargarPdfSemana } from "@/lib/download";
-import { PLANES, formatCOP, aplicarDescuento, CODIGOS_MOCK } from "@/lib/pricing";
+import { PLANES, formatCOP, aplicarDescuento, CODIGOS_MOCK, planTipoPorDuracion } from "@/lib/pricing";
 import { EVENTOS } from "@/lib/sample-data";
 import type { Workout } from "@/types";
 
@@ -167,6 +167,8 @@ export default function PlanPage() {
                   <div style={{ padding: "0 18px 18px" }}>
                     {bloqueada ? (
                       <Paywall
+                        semanas={plan.semanas_totales}
+                        eventoNombre={evento?.nombre ?? null}
                         onPay={(pagado) => {
                           const nuevo = saveState({ pagado });
                           setSt(nuevo);
@@ -284,11 +286,20 @@ function WorkoutRow({ w, ftp }: { w: Workout; ftp: number }) {
   );
 }
 
-function Paywall({ onPay }: { onPay: (pagado: boolean) => void }) {
+function Paywall({
+  semanas,
+  eventoNombre,
+  onPay,
+}: {
+  semanas: number;
+  eventoNombre: string | null;
+  onPay: (pagado: boolean) => void;
+}) {
   const router = useRouter();
   const { user, disponible } = useAuth();
+  const recomendado = planTipoPorDuracion(semanas);
   const [codigo, setCodigo] = useState("");
-  const [seleccion, setSeleccion] = useState("evento_3m");
+  const [seleccion, setSeleccion] = useState<string>(recomendado);
   const [cargando, setCargando] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
 
@@ -341,23 +352,26 @@ function Paywall({ onPay }: { onPay: (pagado: boolean) => void }) {
       <h3 className="rc-display" style={{ fontSize: 26, color: "var(--color-cream)", margin: "10px 0 4px" }}>
         Desbloquea tu plan completo
       </h3>
-      <p style={{ color: "rgba(240,235,224,0.8)", fontSize: 14, marginBottom: 16 }}>
-        Todas las semanas, entrenos descargables (.ZWO/.ERG/PDF) y recálculo automático tras cada salida.
+      <p style={{ color: "rgba(240,235,224,0.85)", fontSize: 14.5, marginBottom: 16 }}>
+        Tu carrera es en <b style={{ color: "var(--color-mustard)" }}>{semanas} semanas</b>
+        {eventoNombre ? ` (${eventoNombre})` : ""}. Pagas <b>una sola vez</b> y tienes tu plan completo hasta
+        el día del evento — con todos los entrenos descargables y recálculo tras cada salida.
       </p>
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(180px,1fr))", gap: 10, marginBottom: 16 }}>
         {PLANES.map((p) => {
           const activo = seleccion === p.tipo;
+          const esRecomendado = p.tipo === recomendado;
           return (
             <button
               key={p.tipo}
               onClick={() => setSeleccion(p.tipo)}
               className="rc-card"
-              style={{ position: "relative", textAlign: "left", cursor: "pointer", border: activo ? "2px solid var(--color-mustard)" : p.destacado ? "1px solid var(--color-mustard)" : "1px solid var(--border-on-dark)", background: activo ? "rgba(212,166,46,0.12)" : "rgba(240,235,224,0.04)" }}
+              style={{ position: "relative", textAlign: "left", cursor: "pointer", border: activo ? "2px solid var(--color-mustard)" : esRecomendado ? "1px solid var(--color-mustard)" : "1px solid var(--border-on-dark)", background: activo ? "rgba(212,166,46,0.14)" : undefined, opacity: p.tipo === "mensual" ? 0.85 : 1 }}
             >
-              {p.destacado && (
+              {esRecomendado && (
                 <span className="rc-tag" style={{ position: "absolute", top: -10, right: 10, background: "var(--color-mustard)", color: "var(--color-charcoal-black)", border: "none", fontSize: 10 }}>
-                  Recomendado
+                  Para tu carrera
                 </span>
               )}
               <span className="rc-eyebrow" style={{ color: "var(--color-mustard)" }}>{p.nombre}</span>

@@ -70,18 +70,18 @@ export default function Home() {
       <Header paso={1} />
 
       {/* HERO */}
-      <section className="topo-dark" style={{ padding: "64px 0 56px" }}>
+      <section className="topo-dark" style={{ padding: "72px 0 76px" }}>
         <div className="rc-container">
           <span className="rc-tag">Tu coach de entrenamiento · Gravel y Ruta · Colombia y LATAM</span>
           <h1
             className="rc-display"
-            style={{ fontSize: "clamp(38px, 6.4vw, 80px)", color: "var(--color-cream)", margin: "18px 0 14px", maxWidth: "18ch" }}
+            style={{ fontSize: "clamp(34px, 5.4vw, 66px)", color: "var(--color-cream)", margin: "22px 0 18px", maxWidth: "17ch" }}
           >
             Pagá una vez,
             <br />
             <span style={{ color: "var(--color-mustard)" }}>entrená hasta tu carrera.</span>
           </h1>
-          <p style={{ fontSize: 19, maxWidth: "56ch", color: "rgba(240,235,224,0.85)" }}>
+          <p style={{ fontSize: 18, lineHeight: 1.6, maxWidth: "52ch", color: "rgba(240,235,224,0.82)" }}>
             Elige tu evento y recibe al instante un plan dinámico y personalizado que se ajusta con cada
             salida. Un solo pago, tu plan completo hasta el día de la carrera — y la primera semana{" "}
             <b style={{ color: "var(--color-mustard)" }}>gratis</b>.

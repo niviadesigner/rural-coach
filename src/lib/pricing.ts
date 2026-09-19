@@ -2,10 +2,11 @@
 // Monetización (COP) y códigos de descuento.
 // ============================================================
 
-import type { PlanTipo } from "@/types";
+
+export type PlanComercialTipo = "corto" | "evento_3m" | "evento_6m" | "mensual";
 
 export interface PlanComercial {
-  tipo: Exclude<PlanTipo, "evento"> | "evento_3m" | "evento_6m";
+  tipo: PlanComercialTipo;
   nombre: string;
   precio_cop: number;
   descripcion: string;
@@ -14,25 +15,38 @@ export interface PlanComercial {
 
 export const PLANES: PlanComercial[] = [
   {
-    tipo: "mensual",
-    nombre: "Mensual",
+    tipo: "corto",
+    nombre: "Por Objetivo · Corto",
     precio_cop: 99000,
-    descripcion: "Plan dinámico mes a mes. Cancela cuando quieras.",
+    descripcion: "Tu carrera está cerca (hasta 4 semanas). Plan completo hasta el día del evento.",
   },
   {
     tipo: "evento_3m",
-    nombre: "Por Objetivo · 3 meses",
+    nombre: "Por Objetivo · hasta 3 meses",
     precio_cop: 270000,
-    descripcion: "Plan completo hacia tu evento, con periodización de 12 semanas.",
+    descripcion: "Plan completo hacia tu evento (5–12 semanas de preparación).",
     destacado: true,
   },
   {
     tipo: "evento_6m",
-    nombre: "Por Objetivo · 6 meses",
+    nombre: "Por Objetivo · hasta 6 meses",
     precio_cop: 460000,
-    descripcion: "Preparación profunda de 24 semanas para tu gran reto.",
+    descripcion: "Preparación profunda (13–24 semanas) para tu gran reto.",
+  },
+  {
+    tipo: "mensual",
+    nombre: "Mensual (sin evento)",
+    precio_cop: 99000,
+    descripcion: "¿Aún sin carrera? Entrena mes a mes. Cancela cuando quieras.",
   },
 ];
+
+/** Elige el plan (y precio) automáticamente según las semanas que faltan al evento. */
+export function planTipoPorDuracion(semanas: number): PlanComercial["tipo"] {
+  if (semanas <= 4) return "corto";
+  if (semanas <= 12) return "evento_3m";
+  return "evento_6m";
+}
 
 export const PRUEBA_DIAS = 7;
 
