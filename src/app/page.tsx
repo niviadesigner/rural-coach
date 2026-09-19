@@ -87,13 +87,21 @@ export default function Home() {
             <b style={{ color: "var(--color-mustard)" }}>Primera semana gratis.</b>
           </p>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 12, marginTop: 20 }}>
-            <a href="#plan" className="rc-btn rc-btn--strava">
+            <a
+              href="#plan"
+              className="rc-btn rc-btn--strava"
+              onClick={() => saveState({ preferirStrava: true })}
+            >
               <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
                 <path d="M15.4 16.97l-2.1-4.14h-3.1L15.4 24l5.2-11.17h-3.1M9.8 0L4.6 11.17h3.1L9.8 6.9l2.1 4.27h3.1z" />
               </svg>
               Empezar con Strava
             </a>
-            <a href="#plan" className="rc-btn rc-btn--gold">
+            <a
+              href="#plan"
+              className="rc-btn rc-btn--gold"
+              onClick={() => saveState({ preferirStrava: false })}
+            >
               Empezar sin Strava →
             </a>
           </div>

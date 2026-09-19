@@ -49,8 +49,23 @@ function OnboardingInner() {
       });
       setSt(nuevo);
       setRuta("strava");
-    } else {
-      setSt(s);
+      return;
+    }
+    setSt(s);
+    // Auto-arranque según la intención elegida en el hero (una sola vez).
+    if (s.preferirStrava === true) {
+      saveState({ preferirStrava: null });
+      const clientId = process.env.NEXT_PUBLIC_STRAVA_CLIENT_ID;
+      if (clientId && !clientId.includes("TU_")) {
+        window.location.href = authorizeUrl(s.eventoId ?? "");
+      } else {
+        const ftp = estimarFtpDesde20min(ACTIVIDAD_MOCK.mejor_20min_w);
+        setSt(saveState({ conectadoStrava: true, athleteId: ATLETA_DEV, ftpBase: ftp, fcUmbralBase: estimarFcUmbral(ACTIVIDAD_MOCK.fc_max) }));
+        setRuta("strava");
+      }
+    } else if (s.preferirStrava === false) {
+      saveState({ preferirStrava: null });
+      setRuta("manual");
     }
   }, [params]);
 

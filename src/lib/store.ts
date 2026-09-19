@@ -18,6 +18,7 @@ export interface AppState {
   avatarUrl: string | null;
   stravaPremium: boolean;
   nombre: string | null;
+  preferirStrava: boolean | null; // intención elegida en el hero (con/sin Strava)
   nivel: Nivel;
   diasDisponibles: number[];
   horasSemana: number;
@@ -41,6 +42,7 @@ export const ESTADO_INICIAL: AppState = {
   avatarUrl: null,
   stravaPremium: false,
   nombre: null,
+  preferirStrava: null,
   nivel: "intermedio",
   diasDisponibles: [2, 4, 6], // Mar, Jue, Sáb
   horasSemana: 6,
