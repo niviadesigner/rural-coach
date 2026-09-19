@@ -165,7 +165,7 @@ export default function Home() {
                     <span className="rc-tag">Dif {e.dificultad}/5</span>
                   </div>
                   <p style={{ fontSize: 14, color: "var(--color-text-muted)", margin: 0 }}>{e.descripcion}</p>
-                  <span className="rc-btn rc-btn--primary" style={{ marginTop: "auto", justifyContent: "center" }}>
+                  <span className="rc-btn rc-btn--teal" style={{ marginTop: "auto", justifyContent: "center" }}>
                     Inscribirme →
                   </span>
                 </div>

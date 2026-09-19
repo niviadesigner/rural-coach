@@ -10,7 +10,10 @@ export const metadata: Metadata = {
     "Tu plan de entrenamiento de gravel dinámico y por objetivo. Escoge tu evento, conéctate con Strava y recibe tu plan al instante. La mejor plataforma de gravel de Colombia y LATAM.",
   manifest: "/manifest.json",
   icons: {
-    icon: "/logo-rural.jpg",
+    icon: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/logo-rural.jpg" },
+    ],
     apple: "/logo-rural.jpg",
   },
   openGraph: {

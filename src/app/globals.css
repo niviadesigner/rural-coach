@@ -199,6 +199,14 @@ textarea {
   background: #e34402;
   color: #fff;
 }
+.rc-btn--teal {
+  background: #1f8b7d;
+  color: #fff;
+}
+.rc-btn--teal:hover {
+  background: #1a7a6e;
+  color: #fff;
+}
 .rc-btn--outline {
   background: transparent;
   border-color: var(--color-charcoal-black);
