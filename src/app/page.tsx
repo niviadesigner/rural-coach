@@ -7,6 +7,7 @@ import { EVENTOS } from "@/lib/sample-data";
 import { saveState } from "@/lib/store";
 import { LIMITES } from "@/lib/zones";
 import LandingSections from "@/components/LandingSections";
+import DeKegelChip from "@/components/DeKegelChip";
 
 function semanasHastaHoy(fecha: string): number {
   const ms = new Date(fecha).getTime() - Date.now();
@@ -69,24 +70,23 @@ export default function Home() {
     <>
       <Header paso={1} />
 
-      {/* HERO */}
-      <section className="topo-dark" style={{ padding: "72px 0 76px" }}>
+      {/* HERO — compacto, tipo app */}
+      <section className="topo-dark" style={{ padding: "clamp(32px,6vw,60px) 0 clamp(28px,5vw,48px)" }}>
         <div className="rc-container">
-          <span className="rc-tag">Tu coach de entrenamiento · Gravel y Ruta · Colombia y LATAM</span>
+          <span className="rc-tag">Método del entrenador de Van der Poel · Gravel Colombia</span>
           <h1
             className="rc-display"
-            style={{ fontSize: "clamp(34px, 5.4vw, 66px)", color: "var(--color-cream)", margin: "22px 0 18px", maxWidth: "17ch" }}
+            style={{ fontSize: "clamp(32px, 7vw, 62px)", color: "var(--color-cream)", margin: "18px 0 14px", maxWidth: "16ch" }}
           >
             Pagá una vez,
             <br />
             <span style={{ color: "var(--color-mustard)" }}>entrená hasta tu carrera.</span>
           </h1>
-          <p style={{ fontSize: 18, lineHeight: 1.6, maxWidth: "52ch", color: "rgba(240,235,224,0.82)" }}>
-            Elige tu evento y recibe al instante un plan dinámico y personalizado que se ajusta con cada
-            salida. Un solo pago, tu plan completo hasta el día de la carrera — y la primera semana{" "}
-            <b style={{ color: "var(--color-mustard)" }}>gratis</b>.
+          <p style={{ fontSize: 17, lineHeight: 1.55, maxWidth: "46ch", color: "rgba(240,235,224,0.85)" }}>
+            Elige tu evento y recibe tu plan al instante. Se ajusta con cada salida.{" "}
+            <b style={{ color: "var(--color-mustard)" }}>Primera semana gratis.</b>
           </p>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 12, marginTop: 22 }}>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 12, marginTop: 20 }}>
             <a href="#plan" className="rc-btn rc-btn--strava">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
                 <path d="M15.4 16.97l-2.1-4.14h-3.1L15.4 24l5.2-11.17h-3.1M9.8 0L4.6 11.17h3.1L9.8 6.9l2.1 4.27h3.1z" />
@@ -98,10 +98,13 @@ export default function Home() {
             </a>
           </div>
           <span className="rc-eyebrow" style={{ display: "block", marginTop: 12, color: "rgba(240,235,224,0.6)" }}>
-            Con Strava jalamos tus vatios · sin Strava lo pones a mano, sin líos
+            Sin tarjeta · 2 minutos · Tu plan listo hoy
           </span>
         </div>
       </section>
+
+      {/* Tira tocable → modal: quién es De Kegel */}
+      <DeKegelChip />
 
       {/* TOQUE 1 — ESCOGE TU EVENTO */}
       <section id="plan" className="topo-light" style={{ padding: "48px 0 72px", scrollMarginTop: 80 }}>
