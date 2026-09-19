@@ -184,11 +184,19 @@ textarea {
   transform: translateY(1px);
 }
 .rc-btn--primary {
-  background: var(--color-mustard);
-  color: var(--color-charcoal-black);
+  background: #1f8b7d;
+  color: #fff;
 }
 .rc-btn--primary:hover {
-  background: var(--color-mustard-light);
+  background: #1a7a6e;
+  color: #fff;
+}
+.rc-btn--gold {
+  background: #e7c961;
+  color: var(--color-charcoal-black);
+}
+.rc-btn--gold:hover {
+  background: #eed37e;
   color: var(--color-charcoal-black);
 }
 .rc-btn--strava {

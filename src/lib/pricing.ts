@@ -86,16 +86,20 @@ export function aplicarDescuento(
       descuentoPct: 0,
     };
   }
-  // Caso especial 6 meses → precio plano de evento.
-  if (plan.tipo === "evento_6m") {
+  const info = CODIGOS_MOCK[codigo.toUpperCase()];
+  const pct = info?.descuentoPct ?? 15;
+  // Caso especial 6 meses con código de evento (15%) → precio plano.
+  if (plan.tipo === "evento_6m" && pct === 15) {
     return { valido: true, precioFinal: 400000, descuentoPct: Math.round((1 - 400000 / plan.precio_cop) * 100) };
   }
-  const precioFinal = Math.round(plan.precio_cop * 0.85);
-  return { valido: true, precioFinal, descuentoPct: 15 };
+  const precioFinal = Math.max(2000, Math.round(plan.precio_cop * (1 - pct / 100)));
+  return { valido: true, precioFinal, descuentoPct: pct };
 }
 
 /** Códigos demo para modo mock (en prod: tabla discount_codes). */
 export const CODIGOS_MOCK: Record<string, { descuentoPct: number; evento: string }> = {
   RURAL15: { descuentoPct: 15, evento: "*" },
   BRUTAL15: { descuentoPct: 15, evento: "evt-brutal-gravel" },
+  // Código de PRUEBA para verificar el pago real barato (borrar tras probar).
+  RCPRUEBA: { descuentoPct: 98, evento: "*" },
 };

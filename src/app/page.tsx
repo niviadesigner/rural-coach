@@ -93,7 +93,7 @@ export default function Home() {
               </svg>
               Empezar con Strava
             </a>
-            <a href="#plan" className="rc-btn rc-btn--outline">
+            <a href="#plan" className="rc-btn rc-btn--gold">
               Empezar sin Strava →
             </a>
           </div>

@@ -58,6 +58,27 @@ export default function PlanPage() {
     }
   }, [user]);
 
+  // Al volver de Wompi (?id=<txId>), verifica el pago y desbloquea.
+  const [pagoMsg, setPagoMsg] = useState<string | null>(null);
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const id = new URLSearchParams(window.location.search).get("id");
+    if (!id) return;
+    setPagoMsg("Confirmando tu pago…");
+    fetch(`/api/wompi/verificar?id=${encodeURIComponent(id)}`)
+      .then((r) => r.json())
+      .then((d) => {
+        if (d.aprobado) {
+          setSt(saveState({ pagado: true }));
+          setPagoMsg("¡Pago confirmado! Tu plan completo está desbloqueado. 🚴");
+        } else {
+          setPagoMsg(`Tu pago quedó ${d.estado ?? "pendiente"}. Si crees que es un error, escríbenos.`);
+        }
+      })
+      .catch(() => setPagoMsg("No pudimos confirmar el pago automáticamente. Escríbenos si ya pagaste."))
+      .finally(() => window.history.replaceState({}, "", "/plan"));
+  }, []);
+
   if (!st || !st.plan) return null;
   const plan = st.plan;
   const evento = plan.event_id ? EVENTOS.find((e) => e.id === plan.event_id) : null;
@@ -75,6 +96,11 @@ export default function PlanPage() {
   return (
     <>
       <Header paso={4} />
+      {pagoMsg && (
+        <div style={{ background: "#1f8b7d", color: "#fff", textAlign: "center", padding: "12px 16px", fontFamily: "var(--font-label)", fontWeight: 600, letterSpacing: "0.02em" }}>
+          {pagoMsg}
+        </div>
+      )}
 
       {/* Resumen del plan */}
       <section className="topo-dark" style={{ padding: "36px 0 32px" }}>
