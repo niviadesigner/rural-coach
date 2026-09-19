@@ -15,6 +15,9 @@ export interface AppState {
   desnivelManual: number | null;
   conectadoStrava: boolean;
   athleteId: number | null;
+  avatarUrl: string | null;
+  stravaPremium: boolean;
+  nombre: string | null;
   nivel: Nivel;
   diasDisponibles: number[];
   horasSemana: number;
@@ -35,6 +38,9 @@ export const ESTADO_INICIAL: AppState = {
   desnivelManual: null,
   conectadoStrava: false,
   athleteId: null,
+  avatarUrl: null,
+  stravaPremium: false,
+  nombre: null,
   nivel: "intermedio",
   diasDisponibles: [2, 4, 6], // Mar, Jue, Sáb
   horasSemana: 6,

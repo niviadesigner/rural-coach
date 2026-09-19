@@ -139,6 +139,45 @@ export function normalizarActividad(a: StravaActivityRaw): ActividadNormalizada 
   };
 }
 
+export interface StravaAthlete {
+  id: number;
+  nombre: string;
+  avatar: string | null;
+  ftp: number | null; // solo lo entrega Strava a atletas Premium/suscritos
+  peso_kg: number | null;
+  premium: boolean;
+}
+
+interface StravaAthleteRaw {
+  id: number;
+  firstname?: string;
+  lastname?: string;
+  profile?: string;
+  profile_medium?: string;
+  ftp?: number | null;
+  weight?: number | null;
+  premium?: boolean;
+  summit?: boolean;
+}
+
+/** Perfil detallado del atleta autenticado (incluye FTP y peso si es Premium). */
+export async function getAthlete(accessToken: string): Promise<StravaAthlete> {
+  const res = await fetch(`${STRAVA_API}/athlete`, {
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+  if (!res.ok) throw new Error(`Strava getAthlete falló: ${res.status}`);
+  const a = (await res.json()) as StravaAthleteRaw;
+  const avatar = a.profile && !a.profile.includes("avatar/athlete") ? a.profile : a.profile_medium ?? null;
+  return {
+    id: a.id,
+    nombre: [a.firstname, a.lastname].filter(Boolean).join(" ").trim(),
+    avatar: avatar ?? null,
+    ftp: a.ftp ?? null,
+    peso_kg: a.weight ?? null,
+    premium: Boolean(a.premium || a.summit),
+  };
+}
+
 export async function getActivity(accessToken: string, id: number): Promise<ActividadNormalizada> {
   const res = await fetch(`${STRAVA_API}/activities/${id}`, {
     headers: { Authorization: `Bearer ${accessToken}` },

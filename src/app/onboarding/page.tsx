@@ -4,7 +4,6 @@ import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Header from "@/components/Header";
 import { loadState, saveState, type AppState } from "@/lib/store";
-import { MOCK_MODE } from "@/lib/supabase/client";
 import { authorizeUrl, ATLETA_DEV } from "@/lib/strava";
 import {
   estimarFtpDesde20min,
@@ -36,7 +35,18 @@ function OnboardingInner() {
     // ¿Volvemos del callback real de Strava?
     if (params.get("strava") === "ok") {
       const athlete = Number(params.get("athlete")) || ATLETA_DEV;
-      const nuevo = saveState({ conectadoStrava: true, athleteId: athlete });
+      const ftpParam = params.get("ftp");
+      const pesoParam = params.get("peso");
+      const nuevo = saveState({
+        conectadoStrava: true,
+        athleteId: athlete,
+        avatarUrl: params.get("avatar"),
+        nombre: params.get("nombre"),
+        stravaPremium: params.get("premium") === "1",
+        ftpBase: ftpParam ? Number(ftpParam) : loadState().ftpBase,
+        pesoKg: pesoParam ? Number(pesoParam) : loadState().pesoKg,
+        fcUmbralBase: loadState().fcUmbralBase ?? 160,
+      });
       setSt(nuevo);
       setRuta("strava");
     } else {
@@ -49,8 +59,13 @@ function OnboardingInner() {
   const evento = st.eventoId ? EVENTOS.find((e) => e.id === st.eventoId) ?? null : null;
 
   function conectarStrava() {
-    if (MOCK_MODE) {
-      // Modo dev: simulamos la conexión con la actividad de ejemplo.
+    const clientId = process.env.NEXT_PUBLIC_STRAVA_CLIENT_ID;
+    const stravaReal = clientId && !clientId.includes("TU_");
+    if (stravaReal) {
+      // OAuth real de Strava.
+      window.location.href = authorizeUrl(st?.eventoId ?? "");
+    } else {
+      // Fallback demo (sin credenciales locales).
       const ftp = estimarFtpDesde20min(ACTIVIDAD_MOCK.mejor_20min_w);
       const nuevo = saveState({
         conectadoStrava: true,
@@ -60,8 +75,6 @@ function OnboardingInner() {
       });
       setSt(nuevo);
       setRuta("strava");
-    } else {
-      window.location.href = authorizeUrl(st?.eventoId ?? "");
     }
   }
 
@@ -96,7 +109,9 @@ function OnboardingInner() {
     setGenerando(true);
     let ftp = st!.ftpBase;
     let fcU = st!.fcUmbralBase;
-    if (ruta === "manual") {
+    // Manual si eligió sin Strava, o si Strava no entregó FTP (no premium).
+    const needManual = ruta === "manual" || (ruta === "strava" && st!.ftpBase == null);
+    if (needManual && watts20) {
       const w = clamp(Number(watts20) || 200, LIMITES.ftpWatts.min, LIMITES.ftpWatts.max);
       ftp = estimarFtpRutaB(w, ftpConocido);
       fcU = fcU ?? 160;
@@ -125,20 +140,22 @@ function OnboardingInner() {
     router.push("/plan");
   }
 
+  const stravaConFtp = ruta === "strava" && st.ftpBase != null;
+  const necesitaFtpManual = ruta === "manual" || (ruta === "strava" && st.ftpBase == null);
   const wattsNum = Number(watts20) || 0;
   const wattsValido =
-    ruta !== "manual" || (wattsNum >= LIMITES.ftpWatts.min && wattsNum <= LIMITES.ftpWatts.max);
-  const ftpMostrar =
-    ruta === "strava"
-      ? st.ftpBase
-      : watts20
-      ? estimarFtpRutaB(clamp(wattsNum, LIMITES.ftpWatts.min, LIMITES.ftpWatts.max), ftpConocido)
-      : null;
+    !necesitaFtpManual || (wattsNum >= LIMITES.ftpWatts.min && wattsNum <= LIMITES.ftpWatts.max);
+  const ftpMostrar = stravaConFtp
+    ? st.ftpBase
+    : watts20
+    ? estimarFtpRutaB(clamp(wattsNum, LIMITES.ftpWatts.min, LIMITES.ftpWatts.max), ftpConocido)
+    : null;
   const wkg = ftpMostrar && st.pesoKg ? Math.round((ftpMostrar / st.pesoKg) * 10) / 10 : null;
   const categoria = wkg ? categoriaPorWkg(wkg) : null;
 
   const puedeVerPlan =
-    st.diasDisponibles.length >= 2 && (ruta === "strava" || (ruta === "manual" && watts20 && wattsValido));
+    st.diasDisponibles.length >= 2 &&
+    (stravaConFtp || (necesitaFtpManual && watts20 !== "" && wattsValido));
 
   return (
     <>
@@ -186,12 +203,10 @@ function OnboardingInner() {
                 <button className="rc-btn rc-btn--outline" onClick={elegirManual}>
                   Continuar sin Strava →
                 </button>
-                {MOCK_MODE && (
-                  <span style={{ fontSize: 12, color: "var(--color-text-muted)" }}>
-                    Modo demo: Strava se simula con una salida de ejemplo (FTP ≈{" "}
-                    {estimarFtpDesde20min(ACTIVIDAD_MOCK.mejor_20min_w)} W).
-                  </span>
-                )}
+                <span style={{ fontSize: 12, color: "var(--color-text-muted)" }}>
+                  Leemos tu perfil y tus vatios. Si tienes Strava Premium, traemos tu FTP solo;
+                  si no, lo pones a mano en un paso. Nunca publicamos nada en tu Strava.
+                </span>
               </div>
             </>
           )}
@@ -204,16 +219,55 @@ function OnboardingInner() {
                 {ruta === "strava" ? "Confirma tus días" : "Cuéntanos lo básico"}
               </h2>
 
-              {ruta === "strava" && st.ftpBase && (
+              {ruta === "strava" && (
                 <div className="rc-card" style={{ marginBottom: 20 }}>
-                  <span className="rc-eyebrow">Calibración automática desde Strava</span>
+                  <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 10 }}>
+                    {st.avatarUrl ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={st.avatarUrl} alt="" width={44} height={44} style={{ borderRadius: "50%", objectFit: "cover" }} />
+                    ) : (
+                      <span style={{ width: 44, height: 44, borderRadius: "50%", background: "#fc4c02", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700 }}>S</span>
+                    )}
+                    <div>
+                      <span className="rc-eyebrow">Strava conectado{st.stravaPremium ? " · Premium" : ""}</span>
+                      {st.nombre && <div style={{ fontSize: 15, fontWeight: 600 }}>{st.nombre}</div>}
+                    </div>
+                  </div>
+                  {!st.ftpBase && (
+                    <div style={{ marginBottom: 14 }}>
+                      <p style={{ fontSize: 13.5, marginTop: 0 }}>
+                        Strava no nos dio tu FTP (se necesita Strava Premium para eso). No hay problema —
+                        <b> pon tu FTP a mano</b> y seguimos:
+                      </p>
+                      <label className="rc-eyebrow">
+                        ¿Cuántos vatios sostienes ~20 min? (o tu FTP si lo sabes)
+                        <input
+                          type="number"
+                          min={LIMITES.ftpWatts.min}
+                          max={LIMITES.ftpWatts.max}
+                          placeholder="ej. 230"
+                          value={watts20}
+                          onChange={(e) => setWatts20(e.target.value)}
+                        />
+                      </label>
+                      {watts20 && !wattsValido && (
+                        <span style={{ fontSize: 12.5, color: "var(--color-terracotta)" }}>
+                          Ingresa un valor realista entre {LIMITES.ftpWatts.min} y {LIMITES.ftpWatts.max} W.
+                        </span>
+                      )}
+                      <label style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 14, marginTop: 8 }}>
+                        <input type="checkbox" style={{ width: "auto" }} checked={ftpConocido} onChange={(e) => setFtpConocido(e.target.checked)} />
+                        Ese número ya es mi FTP conocido
+                      </label>
+                    </div>
+                  )}
                   <div style={{ display: "flex", gap: 20, marginTop: 8, flexWrap: "wrap" }}>
                     <div>
-                      <div className="rc-display" style={{ fontSize: 30, color: "var(--color-olive)" }}>{st.ftpBase} W</div>
-                      <span style={{ fontSize: 12, color: "var(--color-text-muted)" }}>FTP estimado</span>
+                      <div className="rc-display" style={{ fontSize: 30, color: "var(--color-olive)" }}>{ftpMostrar ?? "—"} W</div>
+                      <span style={{ fontSize: 12, color: "var(--color-text-muted)" }}>{st.stravaPremium && st.ftpBase ? "FTP (Strava Premium)" : "FTP"}</span>
                     </div>
                     <div>
-                      <div className="rc-display" style={{ fontSize: 30, color: "var(--color-terracotta)" }}>{st.fcUmbralBase} ppm</div>
+                      <div className="rc-display" style={{ fontSize: 30, color: "var(--color-terracotta)" }}>{st.fcUmbralBase ?? 160} ppm</div>
                       <span style={{ fontSize: 12, color: "var(--color-text-muted)" }}>FC umbral</span>
                     </div>
                     {wkg && categoria && (

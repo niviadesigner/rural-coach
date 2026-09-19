@@ -1,10 +1,17 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { useAuth } from "@/lib/auth";
+import { loadState } from "@/lib/store";
 
 export default function Header({ paso }: { paso?: number }) {
   const { user, salir, disponible } = useAuth();
+  const [avatar, setAvatar] = useState<string | null>(null);
+
+  useEffect(() => {
+    setAvatar(loadState().avatarUrl);
+  }, [user]);
 
   return (
     <header
@@ -53,25 +60,30 @@ export default function Header({ paso }: { paso?: number }) {
         {disponible &&
           (user ? (
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              <span
-                title={user.email ?? ""}
-                style={{
-                  width: 30,
-                  height: 30,
-                  borderRadius: "50%",
-                  background: "var(--color-olive)",
-                  color: "var(--color-cream)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontFamily: "var(--font-label)",
-                  fontWeight: 700,
-                  fontSize: 14,
-                  textTransform: "uppercase",
-                }}
-              >
-                {(user.email ?? "?").slice(0, 1)}
-              </span>
+              {avatar ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={avatar} alt="" title={user.email ?? ""} width={30} height={30} style={{ borderRadius: "50%", objectFit: "cover" }} />
+              ) : (
+                <span
+                  title={user.email ?? ""}
+                  style={{
+                    width: 30,
+                    height: 30,
+                    borderRadius: "50%",
+                    background: "var(--color-olive)",
+                    color: "var(--color-cream)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontFamily: "var(--font-label)",
+                    fontWeight: 700,
+                    fontSize: 14,
+                    textTransform: "uppercase",
+                  }}
+                >
+                  {(user.email ?? "?").slice(0, 1)}
+                </span>
+              )}
               <button className="rc-btn rc-btn--ghost" style={{ padding: "6px 8px", fontSize: 12 }} onClick={() => salir()}>
                 Salir
               </button>
