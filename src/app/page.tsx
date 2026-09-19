@@ -6,6 +6,7 @@ import Header from "@/components/Header";
 import { EVENTOS } from "@/lib/sample-data";
 import { saveState } from "@/lib/store";
 import { LIMITES } from "@/lib/zones";
+import LandingSections from "@/components/LandingSections";
 
 function semanasHastaHoy(fecha: string): number {
   const ms = new Date(fecha).getTime() - Date.now();
@@ -89,7 +90,7 @@ export default function Home() {
       </section>
 
       {/* TOQUE 1 — ESCOGE TU EVENTO */}
-      <section className="topo-light" style={{ padding: "48px 0 72px" }}>
+      <section id="plan" className="topo-light" style={{ padding: "48px 0 72px", scrollMarginTop: 80 }}>
         <div className="rc-container">
           <span className="rc-eyebrow">Toque 1 de 4 · Elige tu objetivo</span>
           <h2 className="rc-display" style={{ fontSize: 34, margin: "6px 0 8px" }}>
@@ -225,6 +226,8 @@ export default function Home() {
           </p>
         </div>
       </section>
+
+      <LandingSections />
     </>
   );
 }
