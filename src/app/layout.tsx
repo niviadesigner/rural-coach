@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { AuthProvider } from "@/lib/auth";
+import SplashScreen from "@/components/SplashScreen";
+import BottomNav from "@/components/BottomNav";
 
 export const metadata: Metadata = {
   title: "Rural Coach — Entrenamiento gravel personalizado · Rural Cycle",
@@ -38,7 +40,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body>
-        <AuthProvider>{children}</AuthProvider>
+        <SplashScreen />
+        <AuthProvider>
+          {children}
+          <BottomNav />
+        </AuthProvider>
       </body>
     </html>
   );

@@ -86,6 +86,20 @@ export default function Home() {
             salida. Un solo pago, tu plan completo hasta el día de la carrera — y la primera semana{" "}
             <b style={{ color: "var(--color-mustard)" }}>gratis</b>.
           </p>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 12, marginTop: 22 }}>
+            <a href="#plan" className="rc-btn rc-btn--strava">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+                <path d="M15.4 16.97l-2.1-4.14h-3.1L15.4 24l5.2-11.17h-3.1M9.8 0L4.6 11.17h3.1L9.8 6.9l2.1 4.27h3.1z" />
+              </svg>
+              Empezar con Strava
+            </a>
+            <a href="#plan" className="rc-btn rc-btn--outline">
+              Empezar sin Strava →
+            </a>
+          </div>
+          <span className="rc-eyebrow" style={{ display: "block", marginTop: 12, color: "rgba(240,235,224,0.6)" }}>
+            Con Strava jalamos tus vatios · sin Strava lo pones a mano, sin líos
+          </span>
         </div>
       </section>
 
