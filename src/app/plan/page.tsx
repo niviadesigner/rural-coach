@@ -9,6 +9,8 @@ import { useAuth } from "@/lib/auth";
 import { guardarPlan } from "@/lib/persist";
 import { NOMBRE_FASE, faseDeSemana } from "@/lib/plan-engine";
 import { descargarZwo, descargarErg, descargarPdfSemana } from "@/lib/download";
+import WorkoutGraph from "@/components/WorkoutGraph";
+import { nutricionSesion } from "@/lib/nutrition";
 import { PLANES, formatCOP, aplicarDescuento, CODIGOS_MOCK, planTipoPorDuracion } from "@/lib/pricing";
 import { EVENTOS } from "@/lib/sample-data";
 import { necesitaCalor } from "@/lib/heat";
@@ -117,23 +119,14 @@ export default function PlanPage() {
           <p style={{ color: "rgba(240,235,224,0.8)", maxWidth: "60ch" }}>
             {plan.semanas_totales} semanas · periodización {plan.fases.map((f) => NOMBRE_FASE[f.fase]).join(" → ")}
           </p>
+          <p style={{ color: "rgba(240,235,224,0.6)", fontSize: 13, maxWidth: "60ch", marginTop: 6 }}>
+            Calculado con <b style={{ color: "#e7c961" }}>tus números reales</b> (FTP {plan.ftp_base} W · FC umbral {plan.fc_umbral_base} ppm). Se recalibra con cada salida — no es un PDF muerto.
+          </p>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 20, marginTop: 16 }}>
             <Metric v={`${plan.ftp_base} W`} l="FTP base" />
             <Metric v={`${plan.fc_umbral_base} ppm`} l="FC umbral" />
             <Metric v={`${plan.workouts.length}`} l="Sesiones" />
             <Metric v={`${tssTotal}`} l="TSS total" />
-          </div>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginTop: 18 }}>
-            {evento && (
-              <Link className="rc-btn rc-btn--gold" href="/nutricion">
-                🍚 Tu sticker de nutrición →
-              </Link>
-            )}
-            {necesitaCalor(evento ?? null) && (
-              <Link className="rc-btn rc-btn--outline" href="/calor">
-                🌡️ Adaptación al calor →
-              </Link>
-            )}
           </div>
         </div>
       </section>
@@ -227,6 +220,23 @@ export default function PlanPage() {
               </div>
             );
           })}
+
+          {/* Cierre — para el día de la carrera */}
+          {evento && (
+            <div className="rc-card" style={{ marginTop: 18, textAlign: "center" }}>
+              <span className="rc-eyebrow">Para el día de la carrera</span>
+              <h3 className="rc-display" style={{ fontSize: 22, margin: "6px 0 12px" }}>Tu plan de avituallamiento</h3>
+              <p style={{ fontSize: 13.5, color: "var(--color-text-muted)", maxWidth: "52ch", margin: "0 auto 14px" }}>
+                Qué comer, en qué kilómetro y cuánto — calculado para {evento.nombre}. Imprímelo y pégalo en tu potencia.
+              </p>
+              <div style={{ display: "flex", gap: 10, flexWrap: "wrap", justifyContent: "center" }}>
+                <Link className="rc-btn rc-btn--gold" href="/nutricion">🍚 Ver mi sticker de nutrición →</Link>
+                {necesitaCalor(evento) && (
+                  <Link className="rc-btn rc-btn--outline" href="/calor">🌡️ Adaptación al calor →</Link>
+                )}
+              </div>
+            </div>
+          )}
         </div>
       </section>
     </>
@@ -274,6 +284,19 @@ function WorkoutRow({ w, ftp }: { w: Workout; ftp: number }) {
       {abierto && (
         <div style={{ background: "var(--color-surface-card)", padding: "12px 14px 14px 20px", fontSize: 13.5 }}>
           <p style={{ margin: "0 0 10px" }}>{w.descripcion}</p>
+          {est.bloques.length > 0 && (
+            <div style={{ background: "#fff", borderRadius: 6, padding: "8px 10px 4px", marginBottom: 10, border: "1px solid var(--border-default)" }}>
+              <WorkoutGraph est={est} />
+            </div>
+          )}
+          {/* Sugerencia de comida de ESTA sesión */}
+          <div style={{ display: "flex", gap: 8, alignItems: "flex-start", background: "color-mix(in srgb, var(--color-mustard) 12%, #fff)", borderRadius: 6, padding: "8px 10px", marginBottom: 12 }}>
+            <span style={{ fontSize: 16 }}>🍌</span>
+            <div>
+              <b className="rc-eyebrow" style={{ color: "var(--color-charcoal-black)", display: "block" }}>Qué comer en esta salida</b>
+              <span style={{ fontSize: 12.5, color: "var(--color-text-muted)" }}>{nutricionSesion(w.duracion_min, w.tipo)}</span>
+            </div>
+          </div>
           {est.bloques.length > 0 && (
             <ul style={{ margin: "0 0 12px", paddingLeft: 18, display: "flex", flexDirection: "column", gap: 4 }}>
               {est.calentamiento_min > 0 && <li>Calentamiento {est.calentamiento_min} min</li>}

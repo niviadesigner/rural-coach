@@ -31,7 +31,7 @@ const ITEMS = [
   { href: "/", label: "Inicio", key: "inicio" },
   { href: "/plan", label: "Mi plan", key: "plan" },
   { href: "/nutricion", label: "Nutrición", key: "nutricion" },
-  { href: "/entrar", label: "Cuenta", key: "cuenta" },
+  { href: "/cuenta", label: "Cuenta", key: "cuenta" },
 ];
 
 export default function BottomNav() {

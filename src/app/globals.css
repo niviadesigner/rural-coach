@@ -399,7 +399,7 @@ textarea {
   color: rgba(240, 235, 224, 0.85);
 }
 .rc-bottomnav__item.is-active {
-  color: #6fd6c6;
+  color: #e7c961;
 }
 /* Espacio para que la barra no tape el final del contenido */
 body {

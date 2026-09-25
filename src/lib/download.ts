@@ -21,11 +21,11 @@ function descargar(nombre: string, contenido: BlobPart, tipo: string) {
 }
 
 export function descargarZwo(w: Workout) {
-  descargar(`rural-coach-s${w.semana}-${w.tipo}.zwo`, workoutToZwo(w), "application/xml");
+  descargar(`rural-coach-s${w.semana}-${w.tipo}.zwo`, workoutToZwo(w), "application/octet-stream");
 }
 
 export function descargarErg(w: Workout, ftp: number) {
-  descargar(`rural-coach-s${w.semana}-${w.tipo}.erg`, workoutToErg(w, ftp), "text/plain");
+  descargar(`rural-coach-s${w.semana}-${w.tipo}.erg`, workoutToErg(w, ftp), "application/octet-stream");
 }
 
 export function descargarPdfSemana(plan: TrainingPlan, semana: number) {

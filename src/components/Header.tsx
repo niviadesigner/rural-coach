@@ -8,10 +8,16 @@ import { loadState } from "@/lib/store";
 export default function Header({ paso }: { paso?: number }) {
   const { user, salir, disponible } = useAuth();
   const [avatar, setAvatar] = useState<string | null>(null);
+  const [nombre, setNombre] = useState<string | null>(null);
 
   useEffect(() => {
-    setAvatar(loadState().avatarUrl);
+    const s = loadState();
+    setAvatar(s.avatarUrl);
+    const meta = (user?.user_metadata?.name as string | undefined) ?? s.nombre ?? user?.email ?? null;
+    setNombre(meta);
   }, [user]);
+
+  const primerNombre = nombre ? nombre.split(/[ @]/)[0] : null;
 
   return (
     <header
@@ -82,6 +88,11 @@ export default function Header({ paso }: { paso?: number }) {
                   }}
                 >
                   {(user.email ?? "?").slice(0, 1)}
+                </span>
+              )}
+              {primerNombre && (
+                <span className="rc-eyebrow" style={{ fontSize: 12, color: "var(--color-charcoal-black)", maxWidth: 90, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                  {primerNombre}
                 </span>
               )}
               <button className="rc-btn rc-btn--ghost" style={{ padding: "6px 8px", fontSize: 12 }} onClick={() => salir()}>

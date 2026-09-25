@@ -116,6 +116,19 @@ export function calcularNutricion(evento: Evento, pesoKg: number | null): PlanNu
   };
 }
 
+/** Sugerencia de comida para UNA sesión, según su duración e intensidad. */
+export function nutricionSesion(duracionMin: number, tipo: string): string {
+  if (tipo === "descanso") return "Día de recuperación: hidrátate bien y prioriza proteína en las comidas.";
+  if (duracionMin < 60) return "Solo agua. Si sales en ayunas, un bocado ligero antes (banano o tostada).";
+  if (duracionMin <= 90) {
+    const intenso = ["umbral", "vo2", "test", "tempo"].includes(tipo);
+    return intenso
+      ? "Come 30–40 g de carbo (1 gel o barra) a la mitad. Bebe 500–600 ml/h."
+      : "1 barra o banano a la hora. Bebe 500 ml/h. Bebida con carbo si aprieta el calor.";
+  }
+  return "Apunta a 40–60 g de carbo por hora: sólido temprano (barra/banano), geles en la parte final. 500–750 ml/h con electrolitos.";
+}
+
 export const ICONO_ALIMENTO: Record<TipoAlimento, string> = {
   solido: "🍌",
   gel: "⚡",
