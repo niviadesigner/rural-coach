@@ -109,7 +109,7 @@ textarea {
 .topo-light {
   background-color: var(--color-cream);
   /* Capa crema translúcida sobre el patrón: baja la intensidad de las líneas. */
-  background-image: linear-gradient(rgba(240, 235, 224, 0.55), rgba(240, 235, 224, 0.55)),
+  background-image: linear-gradient(rgba(240, 235, 224, 0.72), rgba(240, 235, 224, 0.72)),
     url("https://ruralcycle.cc/imagenes/topo-pattern-light.webp");
   background-repeat: no-repeat, no-repeat;
   background-size: cover, cover;
@@ -119,7 +119,7 @@ textarea {
   /* Paleta C — oliva oscuro con acento teal. */
   background-color: #243019;
   /* Capa oliva translúcida sobre el patrón: baja la intensidad de las líneas. */
-  background-image: linear-gradient(rgba(30, 42, 24, 0.86), rgba(30, 42, 24, 0.86)),
+  background-image: linear-gradient(rgba(30, 42, 24, 0.93), rgba(30, 42, 24, 0.93)),
     url("https://ruralcycle.cc/imagenes/topo-pattern-dark.webp");
   background-repeat: no-repeat, no-repeat;
   background-size: cover, cover;
