@@ -108,16 +108,18 @@ textarea {
    ================================================================ */
 .topo-light {
   background-color: var(--color-cream);
-  background-image: url("https://ruralcycle.cc/imagenes/topo-pattern-light.webp");
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center;
+  /* Capa crema translúcida sobre el patrón: baja la intensidad de las líneas. */
+  background-image: linear-gradient(rgba(240, 235, 224, 0.55), rgba(240, 235, 224, 0.55)),
+    url("https://ruralcycle.cc/imagenes/topo-pattern-light.webp");
+  background-repeat: no-repeat, no-repeat;
+  background-size: cover, cover;
+  background-position: center, center;
 }
 .topo-dark {
   /* Paleta C — oliva oscuro con acento teal. */
   background-color: #243019;
   /* Capa oliva translúcida sobre el patrón: baja la intensidad de las líneas. */
-  background-image: linear-gradient(rgba(30, 42, 24, 0.7), rgba(30, 42, 24, 0.7)),
+  background-image: linear-gradient(rgba(30, 42, 24, 0.86), rgba(30, 42, 24, 0.86)),
     url("https://ruralcycle.cc/imagenes/topo-pattern-dark.webp");
   background-repeat: no-repeat, no-repeat;
   background-size: cover, cover;
