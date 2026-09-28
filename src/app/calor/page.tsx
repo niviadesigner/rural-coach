@@ -57,7 +57,7 @@ export default function CalorPage() {
           </div>
 
           {/* Señales para parar */}
-          <div className="rc-card" style={{ marginBottom: 20, background: "color-mix(in srgb, var(--color-terracotta) 8%, #fff)" }}>
+          <div className="rc-card" style={{ marginBottom: 20, background: "color-mix(in srgb, var(--color-terracotta) 12%, var(--app-surface))" }}>
             <h2 className="rc-display" style={{ fontSize: 18, marginBottom: 8 }}>🛑 Para YA si sientes:</h2>
             <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
               {protocolo.senalesParar.map((s, i) => (

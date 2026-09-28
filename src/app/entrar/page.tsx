@@ -123,7 +123,7 @@ function pill(activo: boolean): React.CSSProperties {
     padding: "10px 12px",
     fontSize: 14,
     background: activo ? "var(--color-olive)" : "transparent",
-    color: activo ? "var(--color-cream)" : "var(--color-charcoal-brown)",
+    color: activo ? "var(--color-cream)" : "var(--app-text)",
     border: "2px solid var(--color-olive)",
   };
 }

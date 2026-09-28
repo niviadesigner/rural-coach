@@ -27,7 +27,7 @@ export default function Header({ paso }: { paso?: number }) {
         justifyContent: "space-between",
         padding: "16px 20px",
         borderBottom: "1px solid var(--border-default)",
-        background: "rgba(240,235,224,0.85)",
+        background: "rgba(20,20,18,0.86)",
         backdropFilter: "blur(8px)",
         position: "sticky",
         top: 0,
@@ -37,7 +37,7 @@ export default function Header({ paso }: { paso?: number }) {
       <Link href="/" style={{ display: "flex", alignItems: "center", gap: 10, color: "inherit" }}>
         <img src="/logo-rural.jpg" alt="Rural Coach" width={40} height={40} style={{ borderRadius: "50%" }} />
         <span style={{ display: "flex", flexDirection: "column", lineHeight: 1 }}>
-          <b className="rc-display" style={{ fontSize: 20, color: "var(--color-charcoal-black)" }}>
+          <b className="rc-display" style={{ fontSize: 20, color: "var(--app-text)" }}>
             RURAL COACH
           </b>
           <span className="rc-eyebrow" style={{ fontSize: 10 }}>
@@ -91,7 +91,7 @@ export default function Header({ paso }: { paso?: number }) {
                 </span>
               )}
               {primerNombre && (
-                <span className="rc-eyebrow" style={{ fontSize: 12, color: "var(--color-charcoal-black)", maxWidth: 90, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                <span className="rc-eyebrow" style={{ fontSize: 12, color: "var(--app-text)", maxWidth: 90, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                   {primerNombre}
                 </span>
               )}

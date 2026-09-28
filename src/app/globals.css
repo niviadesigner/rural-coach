@@ -414,3 +414,81 @@ body {
     padding-bottom: 0;
   }
 }
+
+/* ================================================================
+   TEMA "DARK PRO" (dirección A) — overrides por cascada
+   ================================================================ */
+:root {
+  --app-bg: #141412;
+  --app-surface: #1f1e1b;
+  --app-surface-2: #2a2825;
+  --app-text: #f0ebe0;
+  --app-muted: #a39a8b;
+  --app-border: rgba(240, 235, 224, 0.11);
+  --app-teal: #5fd0c1;
+  --border-default: rgba(240, 235, 224, 0.11);
+  --color-text-muted: #a39a8b;
+  --shadow-card: 0 6px 18px rgba(0, 0, 0, 0.35);
+}
+body {
+  background: var(--app-bg);
+  color: var(--app-text);
+}
+button {
+  color: inherit;
+}
+input,
+select,
+textarea {
+  background: var(--app-surface-2);
+  color: var(--app-text);
+  border-color: var(--app-border);
+}
+input::placeholder,
+textarea::placeholder {
+  color: #7d7568;
+}
+.topo-light {
+  background-color: var(--app-bg);
+  background-image: linear-gradient(rgba(20, 20, 18, 0.9), rgba(20, 20, 18, 0.9)),
+    url("https://ruralcycle.cc/imagenes/topo-pattern-dark.webp");
+  background-repeat: no-repeat, no-repeat;
+  background-size: cover, cover;
+  background-position: center, center;
+}
+.rc-tag {
+  color: var(--app-text);
+  background: rgba(240, 235, 224, 0.06);
+  border-color: var(--app-border);
+}
+.rc-btn--outline {
+  border-color: rgba(240, 235, 224, 0.28);
+  color: var(--app-text);
+}
+.rc-btn--outline:hover {
+  background: rgba(240, 235, 224, 0.06);
+}
+.rc-card {
+  background: var(--app-surface);
+  color: var(--app-text);
+  border-color: var(--app-border);
+}
+.rc-dekegel-bar {
+  background: var(--app-surface);
+  border-bottom-color: var(--app-border);
+}
+.rc-dekegel-chip {
+  color: var(--app-text);
+}
+/* El sticker de nutrición es imprimible: se mantiene claro */
+#sticker {
+  background: #fff;
+  color: #2b241c;
+  --color-text-muted: #6b6152;
+  --border-default: rgba(28, 27, 25, 0.18);
+}
+#sticker .rc-tag {
+  color: #2b241c;
+  background: rgba(255, 255, 255, 0.5);
+  border-color: rgba(28, 27, 25, 0.18);
+}

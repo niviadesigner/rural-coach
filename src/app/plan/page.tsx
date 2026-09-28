@@ -10,6 +10,8 @@ import { guardarPlan } from "@/lib/persist";
 import { NOMBRE_FASE, faseDeSemana } from "@/lib/plan-engine";
 import { descargarZwo, descargarErg, descargarPdfSemana } from "@/lib/download";
 import WorkoutGraph from "@/components/WorkoutGraph";
+import ProgressRing from "@/components/ProgressRing";
+import TssBars from "@/components/TssBars";
 import { nutricionSesion } from "@/lib/nutrition";
 import { PLANES, formatCOP, aplicarDescuento, CODIGOS_MOCK, planTipoPorDuracion } from "@/lib/pricing";
 import { EVENTOS } from "@/lib/sample-data";
@@ -90,6 +92,25 @@ export default function PlanPage() {
 
   const tssTotal = plan.workouts.reduce((a, w) => a + w.tss_objetivo, 0);
 
+  // ---- Dashboard (datos reales del plan) ----
+  const MS_DIA = 24 * 3600 * 1000;
+  const tssPorSemana = semanas.map((s) =>
+    plan.workouts.filter((w) => w.semana === s).reduce((a, w) => a + w.tss_objetivo, 0)
+  );
+  const fasePorSemana = semanas.map((s) => faseDeSemana(plan.fases, s) as string);
+  const semanaActual = Math.max(
+    1,
+    Math.min(plan.semanas_totales, Math.floor((Date.now() - new Date(plan.fecha_inicio).getTime()) / (7 * MS_DIA)) + 1)
+  );
+  const tssPico = Math.max(1, ...tssPorSemana);
+  const tssSemActual = tssPorSemana[semanaActual - 1] ?? 0;
+  const diasRestantes = plan.fecha_evento
+    ? Math.max(0, Math.ceil((new Date(plan.fecha_evento).getTime() - Date.now()) / MS_DIA))
+    : null;
+  const diasTotales = plan.fecha_evento
+    ? Math.max(1, Math.round((new Date(plan.fecha_evento).getTime() - new Date(plan.fecha_inicio).getTime()) / MS_DIA))
+    : 1;
+
   function workoutsDe(semana: number): Workout[] {
     return plan.workouts.filter((w) => w.semana === semana).sort((a, b) => a.dia - b.dia);
   }
@@ -158,6 +179,43 @@ export default function PlanPage() {
       {/* Semanas */}
       <section className="topo-light" style={{ padding: "32px 0 64px" }}>
         <div className="rc-container">
+          {/* Dashboard: anillos de progreso + TSS semanal */}
+          <div className="rc-card" style={{ marginBottom: 18, padding: 18 }}>
+            <span className="rc-eyebrow">Tu progreso</span>
+            <div style={{ display: "flex", justifyContent: "space-around", gap: 8, flexWrap: "wrap", margin: "14px 0 18px" }}>
+              <ProgressRing
+                value={(semanaActual / plan.semanas_totales) * 100}
+                label={`${semanaActual}/${plan.semanas_totales}`}
+                sub="semana del plan"
+                color="#5fd0c1"
+              />
+              <ProgressRing
+                value={(tssSemActual / tssPico) * 100}
+                label={`${tssSemActual}`}
+                sub="TSS esta semana"
+                color="#e7c961"
+              />
+              {diasRestantes != null && (
+                <ProgressRing
+                  value={(1 - diasRestantes / diasTotales) * 100}
+                  label={`${diasRestantes}d`}
+                  sub="para tu carrera"
+                  color="#c97e4a"
+                />
+              )}
+            </div>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
+              <span className="rc-eyebrow">TSS semanal</span>
+              <span style={{ fontSize: 11, color: "var(--app-muted)" }}>Pico {tssPico}</span>
+            </div>
+            <TssBars valores={tssPorSemana} actual={semanaActual} fases={fasePorSemana} />
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginTop: 6, fontSize: 10.5, color: "var(--app-muted)" }}>
+              <span><i style={{ display: "inline-block", width: 8, height: 8, borderRadius: 2, background: "#657a4f", marginRight: 4 }} />Base</span>
+              <span><i style={{ display: "inline-block", width: 8, height: 8, borderRadius: 2, background: "#e7c961", marginRight: 4 }} />Construcción</span>
+              <span><i style={{ display: "inline-block", width: 8, height: 8, borderRadius: 2, background: "#c97e4a", marginRight: 4 }} />Específico</span>
+              <span><i style={{ display: "inline-block", width: 8, height: 8, borderRadius: 2, background: "#8fd8cc", marginRight: 4 }} />Puesta a punto</span>
+            </div>
+          </div>
           {semanas.map((semana) => {
             const fase = faseDeSemana(plan.fases, semana);
             const bloqueada = semanaBloqueada(semana);
@@ -171,7 +229,7 @@ export default function PlanPage() {
                   style={{ width: "100%", textAlign: "left", background: "transparent", border: "none", cursor: "pointer", padding: 18, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}
                 >
                   <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                    <span className="rc-display" style={{ fontSize: 24, color: "var(--color-charcoal-black)" }}>S{semana}</span>
+                    <span className="rc-display" style={{ fontSize: 24, color: "var(--app-text)" }}>S{semana}</span>
                     <div>
                       <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
                         <span className="rc-tag">{NOMBRE_FASE[fase]}</span>
@@ -261,11 +319,11 @@ function WorkoutRow({ w, ftp }: { w: Workout; ftp: number }) {
         <div style={{ width: 6, background: COLOR_TIPO[w.tipo] ?? "var(--color-olive)" }} />
         <button
           onClick={() => setAbierto(!abierto)}
-          style={{ flex: 1, background: "#fff", border: "none", textAlign: "left", padding: "12px 14px", cursor: "pointer", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10 }}
+          style={{ flex: 1, background: "var(--app-surface)", border: "none", textAlign: "left", padding: "12px 14px", cursor: "pointer", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10 }}
         >
           <div>
             <div style={{ display: "flex", gap: 8, alignItems: "baseline", flexWrap: "wrap" }}>
-              <span className="rc-eyebrow" style={{ color: "var(--color-charcoal-black)" }}>{DIAS[w.dia]}</span>
+              <span className="rc-eyebrow" style={{ color: "var(--app-text)" }}>{DIAS[w.dia]}</span>
               <b style={{ fontSize: 15 }}>{w.nombre}</b>
               {w.tipo === "test" && (
                 <span className="rc-tag" style={{ fontSize: 10, background: "var(--color-teal)", color: "var(--color-cream)", border: "none" }}>
@@ -282,18 +340,18 @@ function WorkoutRow({ w, ftp }: { w: Workout; ftp: number }) {
         </button>
       </div>
       {abierto && (
-        <div style={{ background: "var(--color-surface-card)", padding: "12px 14px 14px 20px", fontSize: 13.5 }}>
+        <div style={{ background: "var(--app-surface-2)", padding: "12px 14px 14px 20px", fontSize: 13.5 }}>
           <p style={{ margin: "0 0 10px" }}>{w.descripcion}</p>
           {est.bloques.length > 0 && (
-            <div style={{ background: "#fff", borderRadius: 6, padding: "8px 10px 4px", marginBottom: 10, border: "1px solid var(--border-default)" }}>
+            <div style={{ background: "var(--app-surface-2)", borderRadius: 6, padding: "8px 10px 4px", marginBottom: 10, border: "1px solid var(--border-default)" }}>
               <WorkoutGraph est={est} />
             </div>
           )}
           {/* Sugerencia de comida de ESTA sesión */}
-          <div style={{ display: "flex", gap: 8, alignItems: "flex-start", background: "color-mix(in srgb, var(--color-mustard) 12%, #fff)", borderRadius: 6, padding: "8px 10px", marginBottom: 12 }}>
+          <div style={{ display: "flex", gap: 8, alignItems: "flex-start", background: "color-mix(in srgb, var(--color-mustard) 14%, var(--app-surface))", borderRadius: 6, padding: "8px 10px", marginBottom: 12 }}>
             <span style={{ fontSize: 16 }}>🍌</span>
             <div>
-              <b className="rc-eyebrow" style={{ color: "var(--color-charcoal-black)", display: "block" }}>Qué comer en esta salida</b>
+              <b className="rc-eyebrow" style={{ color: "var(--app-text)", display: "block" }}>Qué comer en esta salida</b>
               <span style={{ fontSize: 12.5, color: "var(--color-text-muted)" }}>{nutricionSesion(w.duracion_min, w.tipo)}</span>
             </div>
           </div>
@@ -324,7 +382,7 @@ function WorkoutRow({ w, ftp }: { w: Workout; ftp: number }) {
           )}
           {w.tipo !== "descanso" && (
             <>
-              <div className="rc-eyebrow" style={{ marginBottom: 6, color: "var(--color-charcoal-black)" }}>
+              <div className="rc-eyebrow" style={{ marginBottom: 6, color: "var(--app-text)" }}>
                 Descarga el entreno a tu ciclocomputador o app
               </div>
               <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>

@@ -387,7 +387,7 @@ function OnboardingInner() {
                     className="rc-btn"
                     style={{
                       background: st.nivel === n ? "var(--color-olive)" : "transparent",
-                      color: st.nivel === n ? "var(--color-cream)" : "var(--color-charcoal-brown)",
+                      color: st.nivel === n ? "var(--color-cream)" : "var(--app-text)",
                       border: "2px solid var(--color-olive)",
                       textTransform: "capitalize",
                     }}
@@ -412,7 +412,7 @@ function OnboardingInner() {
                           key={o.key}
                           onClick={() => setObjetivo(o.key)}
                           className="rc-card"
-                          style={{ textAlign: "left", cursor: "pointer", padding: 14, border: activo ? "2px solid var(--color-terracotta)" : "1px solid var(--border-default)", background: activo ? "color-mix(in srgb, var(--color-terracotta) 8%, #fff)" : "#fff" }}
+                          style={{ textAlign: "left", cursor: "pointer", padding: 14, border: activo ? "2px solid var(--color-terracotta)" : "1px solid var(--border-default)", background: activo ? "color-mix(in srgb, var(--color-terracotta) 12%, var(--app-surface))" : "var(--app-surface)" }}
                         >
                           <b style={{ fontSize: 15, display: "block" }}>{o.titulo}</b>
                           <span style={{ fontSize: 12.5, color: "var(--color-text-muted)" }}>{o.desc}</span>
@@ -436,7 +436,7 @@ function OnboardingInner() {
                       style={{
                         padding: "10px 16px",
                         background: activo ? "var(--color-mustard)" : "transparent",
-                        color: activo ? "var(--color-charcoal-black)" : "var(--color-charcoal-brown)",
+                        color: activo ? "var(--color-charcoal-black)" : "var(--app-text)",
                         border: "2px solid var(--color-mustard)",
                       }}
                     >
