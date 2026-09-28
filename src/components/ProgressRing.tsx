@@ -4,7 +4,7 @@ export default function ProgressRing({
   label,
   sub,
   size = 84,
-  color = "#5fd0c1",
+  color = "#1f8b7d",
 }: {
   value: number; // 0–100
   label: string; // texto central grande
@@ -21,7 +21,7 @@ export default function ProgressRing({
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}>
       <div style={{ position: "relative", width: size, height: size }}>
         <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} role="img" aria-label={`${label} ${sub}`}>
-          <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="rgba(240,235,224,0.10)" strokeWidth={stroke} />
+          <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="rgba(28,27,25,0.10)" strokeWidth={stroke} />
           <circle
             cx={size / 2}
             cy={size / 2}

@@ -187,20 +187,20 @@ export default function PlanPage() {
                 value={(semanaActual / plan.semanas_totales) * 100}
                 label={`${semanaActual}/${plan.semanas_totales}`}
                 sub="semana del plan"
-                color="#5fd0c1"
+                color="#1f8b7d"
               />
               <ProgressRing
                 value={(tssSemActual / tssPico) * 100}
                 label={`${tssSemActual}`}
                 sub="TSS esta semana"
-                color="#e7c961"
+                color="#d4a62e"
               />
               {diasRestantes != null && (
                 <ProgressRing
                   value={(1 - diasRestantes / diasTotales) * 100}
                   label={`${diasRestantes}d`}
                   sub="para tu carrera"
-                  color="#c97e4a"
+                  color="#b5652d"
                 />
               )}
             </div>
@@ -211,9 +211,9 @@ export default function PlanPage() {
             <TssBars valores={tssPorSemana} actual={semanaActual} fases={fasePorSemana} />
             <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginTop: 6, fontSize: 10.5, color: "var(--app-muted)" }}>
               <span><i style={{ display: "inline-block", width: 8, height: 8, borderRadius: 2, background: "#657a4f", marginRight: 4 }} />Base</span>
-              <span><i style={{ display: "inline-block", width: 8, height: 8, borderRadius: 2, background: "#e7c961", marginRight: 4 }} />Construcción</span>
+              <span><i style={{ display: "inline-block", width: 8, height: 8, borderRadius: 2, background: "#d4a62e", marginRight: 4 }} />Construcción</span>
               <span><i style={{ display: "inline-block", width: 8, height: 8, borderRadius: 2, background: "#c97e4a", marginRight: 4 }} />Específico</span>
-              <span><i style={{ display: "inline-block", width: 8, height: 8, borderRadius: 2, background: "#8fd8cc", marginRight: 4 }} />Puesta a punto</span>
+              <span><i style={{ display: "inline-block", width: 8, height: 8, borderRadius: 2, background: "#2c9c8f", marginRight: 4 }} />Puesta a punto</span>
             </div>
           </div>
           {semanas.map((semana) => {

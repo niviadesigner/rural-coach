@@ -27,7 +27,7 @@ export default function Header({ paso }: { paso?: number }) {
         justifyContent: "space-between",
         padding: "16px 20px",
         borderBottom: "1px solid var(--border-default)",
-        background: "rgba(20,20,18,0.86)",
+        background: "rgba(240,235,224,0.88)",
         backdropFilter: "blur(8px)",
         position: "sticky",
         top: 0,

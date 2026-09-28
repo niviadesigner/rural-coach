@@ -17,7 +17,7 @@ export default function TssBars({
   const x0 = (W - (n * bw + gap * (n - 1))) / 2;
 
   const colorFase = (f?: string) =>
-    f === "base" ? "#657a4f" : f === "construccion" ? "#e7c961" : f === "especifico" ? "#c97e4a" : "#8fd8cc";
+    f === "base" ? "#657a4f" : f === "construccion" ? "#d4a62e" : f === "especifico" ? "#c97e4a" : "#2c9c8f";
 
   return (
     <svg viewBox={`0 0 ${W} ${H + 14}`} width="100%" role="img" aria-label="TSS semanal del plan" style={{ display: "block" }}>
@@ -36,7 +36,7 @@ export default function TssBars({
               fill={colorFase(fases?.[i])}
               opacity={esActual ? 1 : 0.55}
             />
-            {esActual && <rect x={x} y={H + 4} width={bw} height={3} rx={1.5} fill="#f0ebe0" />}
+            {esActual && <rect x={x} y={H + 4} width={bw} height={3} rx={1.5} fill="#2b241c" />}
           </g>
         );
       })}
