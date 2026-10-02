@@ -148,7 +148,14 @@ export default function Home() {
                     onError={(ev) => {
                       (ev.currentTarget as HTMLImageElement).style.display = "none";
                     }}
-                    style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }}
+                    style={{
+                      position: "absolute",
+                      inset: 0,
+                      width: "100%",
+                      height: "100%",
+                      objectFit: e.imagen_ajuste ?? "cover",
+                      padding: e.imagen_ajuste === "contain" ? 12 : 0,
+                    }}
                   />
                   {/* Fallback de marca (visible si no hay logo aún) */}
                   <span className="rc-display" style={{ fontSize: 22, color: "var(--color-cream)", textAlign: "center", lineHeight: 1, zIndex: 0 }}>

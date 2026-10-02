@@ -66,6 +66,37 @@ export const EVENTOS: Evento[] = [
     imagen_url: "/eventos/transcordilleras.png",
     temperatura_zona_c: 19,
   },
+  {
+    id: "evt-la-granja-gravel",
+    nombre: "La Granja Gravel Race",
+    es_rural_cycle: true,
+    fecha: "2026-12-13",
+    ciudad: "Tenjo, Cundinamarca",
+    distancia_km: 90,
+    desnivel_m: 800,
+    pct_gravel: 100,
+    dificultad: 3,
+    descripcion:
+      "Edición fin de año. 90 km de caminos destapados por la Sabana, sin puertos que te den respiro: se rueda a ritmo, se trabaja en grupo y se gana con la cabeza. 100% gravel, cero pavimento.",
+    imagen_url: "/eventos/la-granja-gravel-race.webp",
+    temperatura_zona_c: 14,
+  },
+  {
+    id: "evt-rural-gravel-suesca-2027",
+    nombre: "Rural Gravel Tour 2027 · Suesca",
+    es_rural_cycle: true,
+    fecha: "2027-03-21",
+    ciudad: "Suesca, Cundinamarca",
+    distancia_km: 90,
+    desnivel_m: 2000,
+    pct_gravel: 100,
+    dificultad: 4,
+    descripcion:
+      "Edición Suesca. 90 km por caminos rurales con +2.000 m de desnivel acumulado: ondulado, exigente, grava y trocha real. 4 categorías, exclusivo para bicicletas de gravel.",
+    imagen_url: "/eventos/rural-gravel-tour-suesca-logo.webp",
+    imagen_ajuste: "contain",
+    temperatura_zona_c: 14,
+  },
 ];
 
 export const EVENTO_DEFAULT = EVENTOS[0];

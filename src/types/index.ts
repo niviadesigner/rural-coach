@@ -37,6 +37,7 @@ export interface Evento {
   dificultad: 1 | 2 | 3 | 4 | 5;
   descripcion: string;
   imagen_url: string;
+  imagen_ajuste?: "cover" | "contain"; // "contain" para logos que no deben recortarse
   temperatura_zona_c?: number; // temperatura típica de la zona del evento (°C)
 }
 
