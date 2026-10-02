@@ -51,14 +51,25 @@ export async function GET(req: NextRequest) {
       }
     }
 
-    // Volver al onboarding con los datos (para calibrar al instante).
-    const p = new URLSearchParams({ strava: "ok", athlete: String(athlete.id) });
-    if (athlete.nombre) p.set("nombre", athlete.nombre);
-    if (athlete.avatar) p.set("avatar", athlete.avatar);
-    if (athlete.ftp != null) p.set("ftp", String(athlete.ftp));
-    if (athlete.peso_kg != null) p.set("peso", String(Math.round(athlete.peso_kg)));
-    p.set("premium", athlete.premium ? "1" : "0");
-    return NextResponse.redirect(`${appUrl}/onboarding?${p.toString()}`);
+    // Volver al onboarding SIN datos personales en la URL: viajan en una cookie
+    // de vida corta (2 min) que el cliente lee y borra al llegar.
+    const datos = {
+      athlete: athlete.id,
+      nombre: athlete.nombre || null,
+      avatar: athlete.avatar || null,
+      ftp: athlete.ftp ?? null,
+      peso: athlete.peso_kg != null ? Math.round(athlete.peso_kg) : null,
+      premium: athlete.premium ? 1 : 0,
+    };
+    const res = NextResponse.redirect(`${appUrl}/onboarding?strava=ok`);
+    res.cookies.set("rc_strava", encodeURIComponent(JSON.stringify(datos)), {
+      maxAge: 120,
+      path: "/",
+      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
+      httpOnly: false,
+    });
+    return res;
   } catch (e) {
     console.error("Strava callback error:", e);
     return NextResponse.redirect(`${appUrl}/onboarding?strava=error`);

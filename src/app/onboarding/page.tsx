@@ -34,21 +34,31 @@ function OnboardingInner() {
     const s = loadState();
     // ¿Volvemos del callback real de Strava?
     if (params.get("strava") === "ok") {
-      const athlete = Number(params.get("athlete")) || ATLETA_DEV;
-      const ftpParam = params.get("ftp");
-      const pesoParam = params.get("peso");
+      // Los datos de Strava llegan en una cookie temporal (no en la URL): se leen y se borran.
+      let d: { athlete?: number; nombre?: string | null; avatar?: string | null; ftp?: number | null; peso?: number | null; premium?: number } | null = null;
+      const m = document.cookie.match(/(?:^|; )rc_strava=([^;]*)/);
+      if (m) {
+        document.cookie = "rc_strava=; Max-Age=0; path=/";
+        try {
+          d = JSON.parse(decodeURIComponent(m[1]));
+        } catch {
+          d = null;
+        }
+      }
+      const prev = loadState();
       const nuevo = saveState({
         conectadoStrava: true,
-        athleteId: athlete,
-        avatarUrl: params.get("avatar"),
-        nombre: params.get("nombre"),
-        stravaPremium: params.get("premium") === "1",
-        ftpBase: ftpParam ? Number(ftpParam) : loadState().ftpBase,
-        pesoKg: pesoParam ? Number(pesoParam) : loadState().pesoKg,
-        fcUmbralBase: loadState().fcUmbralBase ?? 160,
+        athleteId: d?.athlete ?? prev.athleteId ?? ATLETA_DEV,
+        avatarUrl: d ? d.avatar ?? null : prev.avatarUrl,
+        nombre: d ? d.nombre ?? null : prev.nombre,
+        stravaPremium: d ? d.premium === 1 : prev.stravaPremium,
+        ftpBase: d?.ftp ?? prev.ftpBase,
+        pesoKg: d?.peso ?? prev.pesoKg,
+        fcUmbralBase: prev.fcUmbralBase ?? 160,
       });
       setSt(nuevo);
       setRuta("strava");
+      window.history.replaceState({}, "", "/onboarding");
       return;
     }
     setSt(s);
