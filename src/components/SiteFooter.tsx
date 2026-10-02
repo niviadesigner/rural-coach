@@ -27,17 +27,6 @@ export default function SiteFooter() {
           Metodología inspirada en principios de entrenamiento de élite. Rural Coach no está afiliado ni respaldado por
           Strava, Inc., Kristof De Kegel ni Alpecin-Premier Tech. Strava es marca de Strava, Inc.
         </p>
-        <a
-          href="https://www.strava.com"
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="Powered by Strava"
-          style={{ display: "inline-flex", alignItems: "center", gap: 6, color: "rgba(240,235,224,0.6)", fontSize: 10.5, letterSpacing: "0.06em", textTransform: "uppercase" }}
-        >
-          Powered by
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/powered-by-strava.svg" alt="Strava" height={14} style={{ height: 14, width: "auto", display: "block" }} />
-        </a>
       </div>
     </footer>
   );
