@@ -222,8 +222,14 @@ function OnboardingInner() {
                 </div>
               )}
               <div style={{ display: "flex", flexDirection: "column", gap: 12, maxWidth: 380 }}>
-                <button className="rc-btn rc-btn--strava" onClick={conectarStrava}>
-                  Conectar con Strava
+                <button
+                  onClick={conectarStrava}
+                  aria-label="Connect with Strava"
+                  style={{ background: "none", border: 0, padding: 0, cursor: "pointer", lineHeight: 0, alignSelf: "flex-start" }}
+                >
+                  {/* Botón oficial de Strava: se usa sin modificar (237×48). */}
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src="/btn_strava_connect_with_orange.svg" alt="Connect with Strava" width={237} height={48} />
                 </button>
                 <button className="rc-btn rc-btn--outline" onClick={elegirManual}>
                   Continuar sin Strava →
