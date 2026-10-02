@@ -110,27 +110,6 @@ export default function LandingSections() {
         </div>
       </section>
 
-      {/* FOOTER */}
-      <footer className="topo-dark" style={{ padding: "28px 0 40px", borderTop: "1px solid var(--border-on-dark)" }}>
-        <div className="rc-container" style={{ display: "flex", flexWrap: "wrap", gap: 16, justifyContent: "space-between", alignItems: "center" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo-rural.jpg" alt="Rural Coach" width={40} height={40} style={{ borderRadius: "50%" }} />
-            <div>
-              <b className="rc-display" style={{ color: "var(--color-cream)", fontSize: 18 }}>RURAL COACH</b>
-              <div style={{ fontSize: 12, color: "rgba(240,235,224,0.6)" }}>Una experiencia Rural Cycle · La Sabana de Bogotá</div>
-            </div>
-          </div>
-          <div style={{ display: "flex", gap: 16, fontSize: 13 }}>
-            <a href="https://www.instagram.com/ruralcycle.cc/" target="_blank" rel="noopener" style={{ color: "#8fd8cc" }}>Instagram</a>
-            <a href="https://wa.me/573196546050" target="_blank" rel="noopener" style={{ color: "#8fd8cc" }}>WhatsApp</a>
-            <a href="https://ruralcycle.cc" target="_blank" rel="noopener" style={{ color: "#8fd8cc" }}>ruralcycle.cc</a>
-          </div>
-        </div>
-        <p className="rc-container" style={{ fontSize: 11, color: "rgba(240,235,224,0.45)", marginTop: 18 }}>
-          Metodología inspirada en principios de entrenamiento de élite. Rural Coach no está afiliado a Kristof De Kegel ni a Alpecin-Premier Tech.
-        </p>
-      </footer>
     </>
   );
 }

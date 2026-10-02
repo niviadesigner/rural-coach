@@ -3,6 +3,7 @@ import "./globals.css";
 import { AuthProvider } from "@/lib/auth";
 import SplashScreen from "@/components/SplashScreen";
 import BottomNav from "@/components/BottomNav";
+import SiteFooter from "@/components/SiteFooter";
 
 export const metadata: Metadata = {
   title: "Rural Coach — Entrenamiento gravel personalizado · Rural Cycle",
@@ -47,6 +48,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <SplashScreen />
         <AuthProvider>
           {children}
+          <SiteFooter />
           <BottomNav />
         </AuthProvider>
       </body>

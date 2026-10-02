@@ -409,7 +409,8 @@ body {
 }
 
 @media print {
-  .rc-bottomnav {
+  .rc-bottomnav,
+  .rc-footer {
     display: none !important;
   }
   body {

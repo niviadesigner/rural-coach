@@ -4,7 +4,7 @@ import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Header from "@/components/Header";
 import { loadState, saveState, type AppState } from "@/lib/store";
-import { authorizeUrl, ATLETA_DEV } from "@/lib/strava";
+import { authorizeUrl, ATLETA_DEV, STRAVA_APROBADO } from "@/lib/strava";
 import {
   estimarFtpDesde20min,
   estimarFtpRutaB,
@@ -56,7 +56,9 @@ function OnboardingInner() {
     if (s.preferirStrava === true) {
       saveState({ preferirStrava: null });
       const clientId = process.env.NEXT_PUBLIC_STRAVA_CLIENT_ID;
-      if (clientId && !clientId.includes("TU_")) {
+      if (!STRAVA_APROBADO) {
+        // Strava aún en revisión: no empujamos a nadie a su error 403; mostramos las opciones con el aviso.
+      } else if (clientId && !clientId.includes("TU_")) {
         window.location.href = authorizeUrl(s.eventoId ?? "");
       } else {
         const ftp = estimarFtpDesde20min(ACTIVIDAD_MOCK.mejor_20min_w);
@@ -208,11 +210,19 @@ function OnboardingInner() {
               <p style={{ color: "var(--color-text-muted)", marginBottom: 20 }}>
                 Un botón y jalamos todo: tu historial estima tu FTP automáticamente. Cero preguntas técnicas.
               </p>
+              {params.get("strava") === "error" && (
+                <div className="rc-card" style={{ marginBottom: 14, maxWidth: 380, borderTop: "4px solid var(--color-terracotta)", fontSize: 13.5 }}>
+                  No pudimos conectar con Strava. Puedes intentarlo de nuevo o usar <b>“Continuar sin Strava”</b>: tu plan sale igual.
+                </div>
+              )}
+              {!STRAVA_APROBADO && (
+                <div className="rc-card" style={{ marginBottom: 14, maxWidth: 380, borderTop: "4px solid var(--color-mustard)", fontSize: 13.5 }}>
+                  <b>Strava está en revisión.</b> Por ahora la conexión solo funciona para cuentas autorizadas. Si Strava te muestra un
+                  error, elige <b>“Continuar sin Strava”</b>: pones tus vatios a mano y listo.
+                </div>
+              )}
               <div style={{ display: "flex", flexDirection: "column", gap: 12, maxWidth: 380 }}>
                 <button className="rc-btn rc-btn--strava" onClick={conectarStrava}>
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
-                    <path d="M15.4 16.97l-2.1-4.14h-3.1L15.4 24l5.2-11.17h-3.1M9.8 0L4.6 11.17h3.1L9.8 6.9l2.1 4.27h3.1z" />
-                  </svg>
                   Conectar con Strava
                 </button>
                 <button className="rc-btn rc-btn--outline" onClick={elegirManual}>

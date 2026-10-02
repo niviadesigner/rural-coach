@@ -11,6 +11,14 @@ const STRAVA_API = "https://www.strava.com/api/v3";
 
 export const SCOPES = "read,activity:read_all,profile:read_all";
 
+/**
+ * Mientras Strava no apruebe la app (modo desarrollador: 1 atleta), el login con Strava
+ * falla con un 403 para cualquiera que no sea el dueño. Con esta variable en "false" la app
+ * no empuja a nadie a Strava de forma automática y avisa que "sin Strava" siempre funciona.
+ * Cuando Strava apruebe: NEXT_PUBLIC_STRAVA_APROBADO=true en Vercel.
+ */
+export const STRAVA_APROBADO = process.env.NEXT_PUBLIC_STRAVA_APROBADO === "true";
+
 export function authorizeUrl(state = ""): string {
   const clientId = process.env.NEXT_PUBLIC_STRAVA_CLIENT_ID ?? "";
   // redirect_uri se arma desde NEXT_PUBLIC_APP_URL (disponible en el cliente).
