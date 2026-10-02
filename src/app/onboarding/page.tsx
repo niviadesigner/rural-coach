@@ -215,12 +215,10 @@ function OnboardingInner() {
                   No pudimos conectar con Strava. Puedes intentarlo de nuevo o usar <b>“Continuar sin Strava”</b>: tu plan sale igual.
                 </div>
               )}
-              {!STRAVA_APROBADO && (
-                <div className="rc-card" style={{ marginBottom: 14, maxWidth: 380, borderTop: "4px solid var(--color-mustard)", fontSize: 13.5 }}>
-                  <b>Strava está en revisión.</b> Por ahora la conexión solo funciona para cuentas autorizadas. Si Strava te muestra un
-                  error, elige <b>“Continuar sin Strava”</b>: pones tus vatios a mano y listo.
-                </div>
-              )}
+              <div className="rc-card" style={{ marginBottom: 14, maxWidth: 380, borderTop: "4px solid var(--color-mustard)", fontSize: 13.5 }}>
+                <b>Conexión con Strava en lanzamiento:</b> los cupos son limitados por ahora. Si Strava te muestra un error, elige{" "}
+                <b>“Continuar sin Strava”</b>: pones tus vatios a mano y tu plan sale igual.
+              </div>
               <div style={{ display: "flex", flexDirection: "column", gap: 12, maxWidth: 380 }}>
                 <button
                   onClick={conectarStrava}
