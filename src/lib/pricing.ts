@@ -99,7 +99,6 @@ export function aplicarDescuento(
 /** Códigos demo para modo mock (en prod: tabla discount_codes). */
 export const CODIGOS_MOCK: Record<string, { descuentoPct: number; evento: string }> = {
   RURAL15: { descuentoPct: 15, evento: "*" },
-  BRUTAL15: { descuentoPct: 15, evento: "evt-brutal-gravel" },
   // Código de PRUEBA para verificar el pago real barato (borrar tras probar).
   RCPRUEBA: { descuentoPct: 98, evento: "*" },
 };

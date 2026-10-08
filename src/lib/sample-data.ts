@@ -7,21 +7,6 @@ import type { Evento } from "@/types";
 
 export const EVENTOS: Evento[] = [
   {
-    id: "evt-brutal-gravel",
-    nombre: "Brutal Gravel Race",
-    es_rural_cycle: false,
-    fecha: "2026-10-11",
-    ciudad: "Sáchica, Boyacá",
-    distancia_km: 130,
-    desnivel_m: 2400,
-    pct_gravel: 80,
-    dificultad: 5,
-    descripcion:
-      "Carrera de gravel con dos distancias (60 km y 130 km) en Sáchica, Boyacá. 80% de terreno suelto y exigente.",
-    imagen_url: "/eventos/brutal-gravel.png",
-    temperatura_zona_c: 22,
-  },
-  {
     id: "evt-giro-rigo",
     nombre: "Giro de Rigo",
     es_rural_cycle: false,
